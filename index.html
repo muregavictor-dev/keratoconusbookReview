@@ -235,46 +235,108 @@
       <div class="agg-ct" id="agg-ct">16 reviews </div>
     </div>
   </div>
+ 
   <div class="rev-grid">
-    <div class="rev-form-box">
-      <div class="form-ttl">LEAVE YOUR <span>REVIEW</span></div>
-      <div class="form-error" id="form-error"></div>
-      <div class="form-success" id="form-success">🎉 Review submitted! Thank you for sharing your thoughts.</div>
-      <form action="https://formspree.io/f/xlgplvde"
-  method="POST" id="review-form" novalidate>
-        <div class="frow-2">
-          <div>
-            <label class="flbl">Your Name *</label>
-            <input class="finp" name="name" id="inp-name" type="text" placeholder="e.g. Jane Oduya" autocomplete="name">
-          </div>
-          <div>
-            <label class="flbl">Format *</label>
-            <select class="fsel" name="type" id="inp-type">
-              <option value="">Select…</option>
-              <option value="hard-copy">📖 Hard Copy</option>
-              <option value="ebook">💻 eBook/PDF</option>
-            </select>
-          </div>
+  <div class="rev-form-box">
+    <div class="form-ttl">LEAVE YOUR <span>REVIEW</span></div>
+    <div class="form-error" id="form-error"></div>
+    <div class="form-success" id="form-success">🎉 Review submitted! Thank you for sharing your thoughts.</div>
+
+    <!--
+      action  → Formspree endpoint: works as a plain HTML POST with NO JS at all.
+      method  → POST (required by Formspree).
+      id      → picked up by script.js to attach the JS-enhanced submit handler.
+      novalidate → we handle all validation in JS; keeps browser bubbles away.
+
+      NO-JS FALLBACK:
+        When JS is disabled the browser submits this form natively to Formspree.
+        Formspree receives the fields and redirects to the URL in _next.
+        Set _next to your thank-you page or back to this page with ?thanks=1.
+
+      JS-ENHANCED PATH (script.js):
+        The submit listener calls e.preventDefault(), validates, pushes to Firebase,
+        then calls sendToFormspree() via fetch — page never navigates away.
+    -->
+    <form
+      id="review-form"
+      action="https://formspree.io/f/xlgplvde"
+      method="POST"
+      novalidate
+    >
+      <!-- Formspree: redirect destination after a native (no-JS) POST -->
+      <input type="hidden" name="_next"    value="https://yourdomain.com/?thanks=1">
+      <!-- Formspree: honeypot — bots fill this, humans don't; Formspree silently drops the submission -->
+      <input type="text"   name="_gotcha"  style="display:none" tabindex="-1" autocomplete="off">
+      <!-- Formspree: label the submission in your dashboard -->
+      <input type="hidden" name="_subject" value="New book review — Through the Lens of Keratoconus">
+
+      <div class="frow-2">
+        <div>
+          <label class="flbl" for="inp-name">Your Name *</label>
+          <input
+            class="finp"
+            type="text"
+            id="inp-name"
+            name="name"
+            placeholder="e.g. Jane Oduya"
+            autocomplete="name"
+          >
         </div>
-        <div class="frow">
-          <label class="flbl">Your Review *</label>
-          <textarea class="ftxt" name="review" id="rev-txt" rows="4" placeholder="What moved you? What changed after reading this?…" maxlength="500"></textarea>
-          <div class="char-ct"><span id="char-ct">0</span>/500</div>
+        <div>
+          <label class="flbl" for="inp-type">Format *</label>
+          <select class="fsel" id="inp-type" name="type">
+            <option value="">Select…</option>
+            <option value="hard-copy">📖 Hard Copy</option>
+            <option value="ebook">💻 eBook/PDF</option>
+          </select>
         </div>
-        <div class="frow">
-          <label class="flbl">Star Rating *</label>
-          <div class="star-row" id="star-row">
-            <span class="sstar" data-v="1">★</span>
-            <span class="sstar" data-v="2">★</span>
-            <span class="sstar" data-v="3">★</span>
-            <span class="sstar" data-v="4">★</span>
-            <span class="sstar" data-v="5">★</span>
-          </div>
-          <input type="hidden" name="rating" id="rev-rating">
+      </div>
+
+      <div class="frow">
+        <label class="flbl" for="rev-txt">Your Review *</label>
+        <textarea
+          class="ftxt"
+          id="rev-txt"
+          name="review"
+          rows="4"
+          placeholder="What moved you? What changed after reading this?…"
+          maxlength="500"
+        ></textarea>
+        <div class="char-ct"><span id="char-ct">0</span>/500</div>
+      </div>
+
+      <div class="frow">
+        <label class="flbl">Star Rating *</label>
+        <div class="star-row" id="star-row">
+          <span class="sstar" data-v="1">★</span>
+          <span class="sstar" data-v="2">★</span>
+          <span class="sstar" data-v="3">★</span>
+          <span class="sstar" data-v="4">★</span>
+          <span class="sstar" data-v="5">★</span>
         </div>
-        <button type="button" class="rcard-vote" data-idx="0"><i>I APPRECIATE YOUR REVIEW</i></button>
-        <button type="submit" class="btn-submit" id="btn-submit">SUBMIT REVIEW &nbsp;→</button>
-      </form>
+        <!--
+          Hidden input carries the numeric rating value chosen via the star UI.
+          name="rating" so it is included in both the JS fetch body and the
+          native HTML POST to Formspree.
+        -->
+        <input type="hidden" id="rev-rating" name="rating" value="">
+      </div>
+
+      <!--
+        IMPORTANT: This was previously <button type="button" class="rcard-vote" data-idx="0">
+        That class + data-idx caused the vote handler (voteH) to fire on this button.
+        Fixed: type="button" is kept (correct — not a submit), but class and data-idx
+        are changed so it no longer collides with the vote card handler.
+      -->
+      <button type="button" class="btn-appreciate" id="btn-appreciate">
+        <i>I APPRECIATE YOUR REVIEW</i>
+      </button>
+
+      <button type="submit" class="btn-submit" id="btn-submit">SUBMIT REVIEW &nbsp;→</button>
+    </form>
+  </div>
+</div>
+      
     </div>
     <div class="rev-feed-col">
       <h3>RECENT <span>REVIEWS</span></h3>
