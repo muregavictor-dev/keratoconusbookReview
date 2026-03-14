@@ -240,7 +240,8 @@
       <div class="form-ttl">LEAVE YOUR <span>REVIEW</span></div>
       <div class="form-error" id="form-error"></div>
       <div class="form-success" id="form-success">🎉 Review submitted! Thank you for sharing your thoughts.</div>
-      <form id="review-form" novalidate>
+      <form action="https://formspree.io/f/xlgplvde"
+  method="POST" id="review-form" novalidate>
         <div class="frow-2">
           <div>
             <label class="flbl">Your Name *</label>
@@ -271,7 +272,7 @@
           </div>
           <input type="hidden" name="rating" id="rev-rating">
         </div>
-        <button type="button" class="rcard-vote" data-idx="0">...</button>
+        <button type="button" class="rcard-vote" data-idx="0"><i>I APPRECIATE YOUR REVIEW</i></button>
         <button type="submit" class="btn-submit" id="btn-submit">SUBMIT REVIEW &nbsp;→</button>
       </form>
     </div>
