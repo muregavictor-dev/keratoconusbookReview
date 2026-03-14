@@ -456,18 +456,28 @@ if(reviewForm){
           .catch(err => console.error('Formspree network error:', err));
 
         // ── Step 3: Update local state and UI ──
-        reviews.unshift({
-          ...newReview,
-          date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-          votes: 0
-        });
-        save();
-        renderRevs();
-        resetReviewForm();
+        // Wrapped in try/catch so any internal rendering error cannot
+        // accidentally fall through to the Firebase .catch() block and
+        // show the user a false "Error submitting" message.
+        try {
+          reviews.unshift({
+            ...newReview,
+            date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+            votes: 0
+          });
+          save();
+          renderRevs();
+          resetReviewForm();
+          addPts(10,'Review submitted');
+          confetti();
+        } catch(innerErr) {
+          // The review was already saved to Firebase — log for debugging only.
+          console.error('UI update error after successful Firebase save:', innerErr);
+        }
 
+        // Always show success and restore the button — Firebase push succeeded.
         sucEl.classList.add('show');
         setTimeout(()=>sucEl.classList.remove('show'),4500);
-        addPts(10,'Review submitted');
         submitting=false;
         if(btn){btn.innerHTML='SUBMIT REVIEW &nbsp;\u2192';btn.style.opacity='1';}
       })
