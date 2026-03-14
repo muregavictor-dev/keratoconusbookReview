@@ -751,35 +751,47 @@
     <a href="/cdn-cgi/l/email-protection#9af7efe8fffdfbecf3f9eef5e8a8aedafdf7fbf3f6b4f9f5f7">Contact</a>
   </div>
 </footer>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+  <!--
+  ═══════════════════════════════════════════════════════════════
+  SCRIPT LOADING ORDER — DO NOT CHANGE THE ORDER OF THESE TAGS
+  ═══════════════════════════════════════════════════════════════
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCJdh5Z2l16Bp9AMSMbrT9E0mqHCVaOhvA",
-    authDomain: "book-database-e9665.firebaseapp.com",
-    projectId: "book-database-e9665",
-    storageBucket: "book-database-e9665.firebasestorage.app",
-    messagingSenderId: "974555897450",
-    appId: "1:974555897450:web:ae51b69fb6228bcf63f413",
-    measurementId: "G-VDP2WX97XR"
-  };
+  1. Firebase compat SDKs (v10) — must load first, synchronously,
+     so that the global `firebase` object exists before script.js runs.
+     NO defer / async on these.
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-<!-- Firebase SDKs -->
- 
+  2. firebaseInit inline script — calls firebase.initializeApp() ONCE.
+     Inline so it runs immediately after the compat SDKs, still synchronously.
+     script.js just calls firebase.database() — it never calls initializeApp().
+
+  3. script.js with defer — deferred so the DOM is fully parsed before
+     any querySelector / getElementById calls inside it execute.
+
+  REMOVED: The <script type="module"> block that was importing Firebase v12
+  modular SDK. That conflicted with the compat v10 SDKs below and caused a
+  "Firebase App named '[DEFAULT]' already exists" error that silently killed
+  all database reads and writes.
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<!-- 1. Firebase compat SDKs — synchronous, no defer/async -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<!-- 2. Initialize Firebase ONCE — inline, runs immediately after compat SDKs -->
+<script>
+  firebase.initializeApp({
+    apiKey:            "AIzaSyCJdh5Z2l16Bp9AMSMbrT9E0mqHCVaOhvA",
+    authDomain:        "book-database-e9665.firebaseapp.com",
+    databaseURL:       "https://book-database-e9665-default-rtdb.firebaseio.com",
+    projectId:         "book-database-e9665",
+    storageBucket:     "book-database-e9665.firebasestorage.app",
+    messagingSenderId: "974555897450",
+    appId:             "1:974555897450:web:ae51b69fb6228bcf63f413",
+    measurementId:     "G-VDP2WX97XR"
+  });
+</script>
+
+<!-- 3. App logic — deferred so DOM is ready when it runs -->
 <script src="script.js" defer></script>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script></script>
-</body>
 </html>
