@@ -1,30 +1,11 @@
-// ─── FIREBASE CONFIG ───
-const firebaseConfig = {
-    apiKey: "AIzaSyCJdh5Z2l16Bp9AMSMbrT9E0mqHCVaOhvA",
-    authDomain: "book-database-e9665.firebaseapp.com",
-    projectId: "book-database-e9665",
-    storageBucket: "book-database-e9665.firebasestorage.app",
-    messagingSenderId: "974555897450",
-    appId: "1:974555897450:web:ae51b69fb6228bcf63f413",
-    measurementId: "G-VDP2WX97XR"
-  };
-
-firebase.initializeApp(firebaseConfig);
+// ─── FIREBASE DB REFERENCE ───
+// firebase-app-compat and firebase-database-compat are loaded via <script> tags
+// in the HTML BEFORE this file. The HTML's firebaseInit() call handles
+// initializeApp() — this file just grabs the already-initialised db reference.
+// The on('value') vote-sync listener lives at the BOTTOM of this file, after the
+// reviews array is declared, so it never hits a reference error on first run.
 const db = firebase.database();
-db.ref('reviews').on('value', snapshot => {
-  const data = snapshot.val();
-  if(!data) return;
-  Object.keys(data).forEach(k => {
-    const idx = parseInt(k.replace('review_',''),10);
-    if(reviews[idx]){
-      reviews[idx].votes = data[k].votes;
-      const btn = document.querySelector(`.rcard-vote[data-idx="${idx}"]`);
-      if(btn){
-        btn.innerHTML = `<i class="fas fa-thumbs-up"></i> ${data[k].votes}`;
-      }
-    }
-  });
-});
+
 
 // ─── NAV SCROLL ───
 window.addEventListener('scroll',()=>{
@@ -787,3 +768,21 @@ const _pFg=document.getElementById('prog-fg');
 if(_pFg) observer.observe(_pFg);
 const _xFg=document.getElementById('xp-fg');
 if(_xFg) observer.observe(_xFg);
+
+// ─── FIREBASE VOTE SYNC (registered here — after `reviews` array is declared) ───
+// Listens for any vote updates on existing reviews and patches the UI in real-time.
+// Kept at the bottom so `reviews` is always defined before this listener fires.
+db.ref('reviews').on('value', snapshot => {
+  const data = snapshot.val();
+  if(!data) return;
+  Object.keys(data).forEach(k => {
+    const idx = parseInt(k.replace('review_',''), 10);
+    if(reviews[idx]){
+      reviews[idx].votes = data[k].votes;
+      const btn = document.querySelector(`.rcard-vote[data-idx="${idx}"]`);
+      if(btn){
+        btn.innerHTML = `<i class="fas fa-thumbs-up"></i> ${data[k].votes}`;
+      }
+    }
+  });
+});
