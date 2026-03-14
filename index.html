@@ -151,36 +151,73 @@
     <div class="thumb-stack">
 
       <!-- Interior 1 -->
-      <div class="thumb">
-        <img class="thumb-img" id="ti1" src="images/interior1.jpg" alt="Interior Page 1">
-        <div class="thumb-lbl-inner">
-          <i class="fas fa-image thumb-ico"></i>
-          <span class="thumb-txt">Interior 1</span>
-        </div>
+     <div class="thumb">
+  <img src="victor cover.jpg" alt="Back Cover">
+  <span class="thumb-txt">full Cover</span>
+</div>
       </div>
 
       <!-- Interior 2 -->
       <div class="thumb">
-        <img class="thumb-img" id="ti2" src="images/interior2.jpg" alt="Interior Page 2">
-        <div class="thumb-lbl-inner">
-          <i class="fas fa-image thumb-ico"></i>
-          <span class="thumb-txt">Interior 2</span>
-        </div>
+  <img src="front cover.jpg" alt="Back Cover">
+  <span class="thumb-txt">Front Cover</span>
+</div>
       </div>
 
       <!-- Back Cover -->
-      <div>
-        <img src="back cover.jpg" alt="Back Cover">
-        
-          <span class="thumb-txt">Back Cover</span>
-        </div>
+      <div class="thumb">
+  <img src="back cover.jpg" alt="Back Cover">
+  <span class="thumb-txt">Back Cover</span>
+</div>
       </div>
 
     </div>
 
   </div>
 </div>
+<style>.thumb {
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+}
 
+.thumb img {
+  width: 100px;           /* default passport size width */
+  height: 120px;          /* default passport size height */
+  object-fit: cover;      /* keeps proportions and crops excess */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto 5px auto;
+  transition: width 0.3s, height 0.3s; /* smooth resizing */
+}
+
+.thumb .thumb-txt {
+  display: block;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .thumb img {
+    width: 70px;
+    height: 85px;
+  }
+  .thumb .thumb-txt {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .thumb img {
+    width: 60px;
+    height: 72px;
+  }
+  .thumb .thumb-txt {
+    font-size: 0.7rem;
+  }
+}</style>
 <div class="hero-scroll">
   <span>Scroll</span>
   <div class="scroll-dot"></div>
