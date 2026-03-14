@@ -2,428 +2,112 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Through the Lens of Keratoconus | Victor M. Murega</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{
-  --red:#E01A00;--red2:#FF2800;--orange:#FF6A00;--orange2:#FF9500;
-  --black:#0A0A0A;--black2:#141414;--black3:#1e1e1e;
-  --white:#FFFFFF;--off:#F5F0EB;--gray:#888;
-  --border:rgba(255,106,0,0.25);--glow:rgba(224,26,0,0.3);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
-body.has-cursor{cursor:none;}
-
-/* ── NOISE OVERLAY ── */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;mix-blend-mode:overlay;}
-
-/* ── CURSOR (desktop only) ── */
-.cursor{width:12px;height:12px;border-radius:50%;background:var(--orange);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .2s,height .2s;display:none;}
-.cursor-ring{width:36px;height:36px;border-radius:50%;border:1px solid var(--orange);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.6;transition:width .3s,height .3s;display:none;}
-@media(hover:hover) and (pointer:fine){
-  body.has-cursor .cursor,.cursor-ring{display:block;}
-}
-
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(10,10,10,.95);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);transition:border-color .3s;}
-nav.lit{border-bottom-color:rgba(255,106,0,.4);}
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;color:var(--white);}
-.nav-logo span{color:var(--orange);}
-.nav-links{display:flex;align-items:center;gap:16px;}
-.nav-links a{color:rgba(255,255,255,.45);text-decoration:none;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;white-space:nowrap;}
-.nav-links a:hover{color:var(--orange);}
-.pts-pill{display:flex;align-items:center;gap:5px;background:var(--red);color:var(--white);padding:5px 12px;font-size:.68rem;font-weight:700;letter-spacing:.08em;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);white-space:nowrap;}
-
-/* ── HERO ── */
-.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:80px 48px 60px;position:relative;overflow:hidden;background:var(--black);}
-.hero::before{content:'';position:absolute;top:0;right:0;width:52%;height:100%;background:var(--black2);clip-path:polygon(80px 0,100% 0,100% 100%,0 100%);z-index:0;}
-.hero-blob{position:absolute;top:20%;left:28%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(224,26,0,.12) 0%,transparent 70%);animation:breathe 5s ease-in-out infinite;pointer-events:none;z-index:0;}
-@keyframes breathe{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:1}}
-.hero-left{position:relative;z-index:2;padding-right:40px;}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:var(--white);font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:6px 14px;margin-bottom:24px;}
-.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:white;animation:blink 1.5s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,7.5rem);line-height:.92;letter-spacing:.02em;color:var(--white);margin-bottom:10px;}
-.hero-title .lo{color:var(--orange);}
-.hero-title .lr{color:var(--red);}
-.hero-sub{font-family:'Fraunces',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.5);line-height:1.65;max-width:380px;margin:20px 0 28px;font-weight:300;}
-.hero-author{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:30px;}
-.hero-author span{color:var(--orange);}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
-.btn-p{background:var(--red);color:var(--white);border:none;padding:14px 24px;font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,10px 100%);transition:background .2s,transform .2s;-webkit-tap-highlight-color:transparent;}
-.btn-p:hover,.btn-p:active{background:var(--orange);transform:translateY(-2px);}
-.btn-g{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.2);padding:14px 24px;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;-webkit-tap-highlight-color:transparent;}
-.btn-g:hover,.btn-g:active{border-color:var(--orange);color:var(--orange);}
-
-/* ── BOOK SHOWCASE ── */
-.hero-right{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.book-showcase{position:relative;display:flex;gap:20px;align-items:flex-end;justify-content:center;}
-.book-cover-main{width:180px;height:260px;background:linear-gradient(135deg,var(--black2),var(--black3));border:1px solid rgba(255,106,0,.3);position:relative;box-shadow:-8px 8px 0 var(--red),0 40px 80px rgba(0,0,0,.8),0 0 60px rgba(224,26,0,.2);transform:perspective(600px) rotateY(-8deg);transition:transform .4s ease;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;-webkit-tap-highlight-color:transparent;}
-.book-cover-main:hover{transform:perspective(600px) rotateY(-2deg) translateY(-6px);}
-.book-cover-main::before{content:'';position:absolute;top:0;left:0;bottom:0;width:12px;background:linear-gradient(to right,var(--red),var(--orange));z-index:1;}
-.book-pages{position:absolute;right:-6px;top:4px;bottom:4px;width:14px;background:repeating-linear-gradient(to bottom,#f0ead8 0px,#f0ead8 1px,#e8e2d0 2px,#e8e2d0 2px);z-index:-1;}
-.book-spine-txt{position:absolute;left:2px;top:0;bottom:0;width:12px;display:flex;align-items:center;justify-content:center;z-index:3;}
-.book-spine-txt span{font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.1em;color:white;writing-mode:vertical-lr;transform:rotate(180deg);white-space:nowrap;}
-.cover-upload-lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;z-index:2;padding:16px;}
-.cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2;}
-.cover-img.vis{display:block;}
-.cover-ico{font-size:1.8rem;color:rgba(255,106,0,.35);}
-.cover-ttl{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--white);line-height:1.1;padding-left:12px;}
-.cover-auth{font-size:.55rem;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;padding-left:12px;}
-.cover-hint{font-size:.6rem;color:rgba(255,255,255,.2);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;}
-.book-badge-circ{position:absolute;top:-12px;right:-12px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--orange));display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.04em;text-align:center;line-height:1.2;box-shadow:0 4px 20px rgba(224,26,0,.4);z-index:4;}
-.thumb-stack{display:flex;flex-direction:column;gap:10px;}
-.thumb{width:75px;height:100px;border:1px solid rgba(255,255,255,.1);background:var(--black3);position:relative;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;-webkit-tap-highlight-color:transparent;}
-.thumb:hover,.thumb:active{transform:scale(1.05);border-color:var(--orange);}
-.thumb::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--orange);opacity:.5;}
-.thumb-lbl-inner{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.thumb-ico{font-size:1rem;color:rgba(255,255,255,.18);}
-.thumb-txt{font-size:.5rem;color:rgba(255,255,255,.18);letter-spacing:.05em;}
-.thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
-.thumb-img.vis{display:block;}
-.hidden-input{display:none;}
-.hero-scroll{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.18);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;z-index:2;}
-.scroll-dot{width:4px;height:4px;border-radius:50%;background:var(--orange);animation:bdot 1.5s ease infinite;}
-@keyframes bdot{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-
-/* ── STATS BAR ── */
-.stats-bar{background:var(--red);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:relative;overflow:hidden;}
-.stats-bar::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(0,0,0,.06) 40px,rgba(0,0,0,.06) 41px);}
-.sblock{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
-.snum{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);line-height:1;}
-.slbl{font-size:.58rem;color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;line-height:1.3;}
-.ssep{width:1px;height:32px;background:rgba(255,255,255,.2);}
-
-/* ── REVIEWS SECTION ── */
-.reviews-section{background:var(--black2);padding:60px 20px;position:relative;overflow:hidden;}
-.reviews-section::before{content:'REVIEWS';position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:10rem;color:rgba(255,255,255,.015);letter-spacing:.05em;pointer-events:none;white-space:nowrap;}
-.rev-header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:28px;margin-bottom:40px;}
-.rev-head-left .sec-tag{display:inline-block;background:var(--orange);color:var(--black);font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:4px 12px;margin-bottom:12px;}
-.rev-big-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,4.5rem);line-height:.95;letter-spacing:.02em;}
-.rev-big-title span{color:var(--orange);}
-.rev-sub{font-family:'Fraunces',serif;font-size:.95rem;font-style:italic;color:rgba(255,255,255,.4);margin-top:12px;font-weight:300;max-width:400px;line-height:1.65;}
-.agg-box{background:var(--red);padding:22px 24px;text-align:center;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));min-width:160px;}
-.agg-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--white);line-height:1;}
-.agg-stars{display:flex;justify-content:center;gap:3px;margin:6px 0;}
-.agg-stars i{color:var(--white);font-size:.85rem;}
-.agg-stars i.dim{opacity:.25;}
-.agg-ct{font-size:.65rem;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;}
-.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
-
-/* ── REVIEW FORM ── */
-.rev-form-box{background:var(--black3);border:1px solid rgba(255,255,255,.06);border-top:3px solid var(--orange);padding:28px 24px;position:relative;}
-.rev-form-box::before{content:'';position:absolute;bottom:0;right:0;width:60px;height:60px;background:linear-gradient(135deg,transparent 50%,rgba(255,106,0,.08) 50%);}
-.form-ttl{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.05em;margin-bottom:20px;}
-.form-ttl span{color:var(--orange);}
-.frow{margin-bottom:14px;}
-.frow-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.flbl{display:block;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px;}
-.finp,.ftxt,.fsel{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-bottom:2px solid rgba(255,255,255,.08);color:var(--white);padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none;}
-.finp:focus,.ftxt:focus,.fsel:focus{border-bottom-color:var(--orange);background:rgba(255,106,0,.04);}
-.ftxt{resize:vertical;min-height:88px;}
-.fsel option{background:var(--black2);}
-.char-ct{text-align:right;font-size:.62rem;color:rgba(255,255,255,.18);margin-top:3px;}
-.star-row{display:flex;gap:8px;margin-top:4px;}
-.sstar{font-size:1.8rem;color:rgba(255,255,255,.15);cursor:pointer;transition:all .15s;line-height:1;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
-.sstar:hover,.sstar.on{color:var(--orange);text-shadow:0 0 12px rgba(255,106,0,.5);transform:scale(1.15);}
-.btn-submit{width:100%;background:linear-gradient(135deg,var(--red),var(--orange));color:var(--white);border:none;padding:16px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.12em;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;margin-top:8px;-webkit-tap-highlight-color:transparent;}
-.btn-submit::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.15);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s;}
-.btn-submit:hover::after,.btn-submit:active::after{width:400px;height:400px;}
-.btn-submit:hover,.btn-submit:active{transform:translateY(-2px);box-shadow:0 8px 30px rgba(224,26,0,.4);}
-.form-error{background:rgba(224,26,0,.12);border:1px solid rgba(224,26,0,.3);color:#ff6b6b;padding:10px 14px;font-size:.78rem;margin-bottom:12px;display:none;}
-.form-error.show{display:block;}
-.form-success{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:#25D366;padding:12px 16px;font-size:.82rem;margin-bottom:12px;display:none;text-align:center;}
-.form-success.show{display:block;}
-
-/* ── REVIEW FEED ── */
-.rev-feed-col h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.05em;margin-bottom:16px;}
-.rev-feed-col h3 span{color:var(--red);}
-.rev-feed{display:flex;flex-direction:column;gap:12px;max-height:560px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth;}
-.rev-feed::-webkit-scrollbar{width:3px;}
-.rev-feed::-webkit-scrollbar-thumb{background:var(--orange);}
-.rcard{background:var(--black3);border-left:3px solid var(--red);padding:18px 18px 14px;position:relative;transition:border-left-color .2s,transform .2s;animation:rslide .3s ease;}
-@keyframes rslide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.rcard:hover{border-left-color:var(--orange);transform:translateX(3px);}
-.rcard-bq{position:absolute;top:8px;right:12px;font-family:'Fraunces',serif;font-size:3rem;color:rgba(255,106,0,.08);line-height:1;pointer-events:none;}
-.rcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:8px;}
-.rcard-name{font-weight:600;font-size:.88rem;color:var(--white);}
-.rcard-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
-.rcard-date{font-size:.6rem;color:rgba(255,255,255,.25);}
-.rcard-type{font-size:.56rem;letter-spacing:.08em;padding:2px 6px;border:1px solid rgba(255,106,0,.3);color:var(--orange);}
-.rcard-stars{display:flex;gap:2px;margin-bottom:8px;}
-.rcard-stars i{font-size:.68rem;color:var(--orange);}
-.rcard-stars i.dim{color:rgba(255,255,255,.1);}
-.rcard-txt{font-size:.83rem;color:rgba(255,255,255,.6);line-height:1.7;font-family:'Fraunces',serif;font-style:italic;font-weight:300;}
-.rcard-foot{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
-.rcard-hlp{font-size:.63rem;color:rgba(255,255,255,.2);letter-spacing:.04em;}
-.rcard-vote{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:5px 12px;font-size:.63rem;letter-spacing:.06em;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:5px;}
-.rcard-vote:hover,.rcard-vote:active{border-color:var(--orange);color:var(--orange);}
-.rcard-vote.voted{border-color:var(--orange);color:var(--orange);}
-.rcard-vote:disabled{cursor:default;}
-.no-rev{text-align:center;padding:50px 20px;border:1px dashed rgba(255,255,255,.07);color:rgba(255,255,255,.18);}
-.no-rev i{font-size:2.2rem;display:block;margin-bottom:10px;color:rgba(255,106,0,.15);}
-.no-rev p{font-family:'Fraunces',serif;font-style:italic;font-size:.86rem;}
-
-/* ── CHAPTERS ── */
-.ch-section{padding:60px 20px;background:var(--black);position:relative;}
-.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;gap:20px;flex-wrap:wrap;}
-.sec-eyebrow{font-size:.63rem;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.sec-eyebrow::before{content:'';width:22px;height:1px;background:var(--orange);}
-.sec-h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.8rem);letter-spacing:.03em;line-height:1;}
-.prog-strip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);padding:12px 16px;display:flex;align-items:center;gap:12px;min-width:200px;}
-.prog-bg{flex:1;height:4px;background:rgba(255,255,255,.07);}
-.prog-fg{height:100%;background:linear-gradient(to right,var(--red),var(--orange));width:0%;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
-.prog-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--orange);white-space:nowrap;}
-.ch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
-.ch-card{background:var(--black2);padding:26px 22px;position:relative;overflow:hidden;transition:background .3s,border-left-width .3s;border-left:0px solid var(--red);}
-.ch-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,106,0,.05),transparent);opacity:0;transition:opacity .3s;}
-.ch-card:hover{background:var(--black3);border-left-width:4px;}
-.ch-card:hover::after{opacity:1;}
-.ch-bignum{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(255,255,255,.04);position:absolute;top:10px;right:16px;line-height:1;pointer-events:none;}
-.ch-lbl{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
-.ch-lbl::before{content:'';width:12px;height:1px;background:var(--orange);}
-.ch-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.03em;line-height:1.1;color:var(--white);margin-bottom:5px;}
-.ch-sub{font-size:.66rem;color:rgba(255,255,255,.28);letter-spacing:.05em;margin-bottom:12px;text-transform:uppercase;}
-.ch-excerpt{font-family:'Fraunces',serif;font-size:.84rem;font-style:italic;font-weight:300;color:rgba(255,255,255,.48);line-height:1.7;margin-bottom:16px;padding-left:12px;border-left:2px solid rgba(255,106,0,.2);}
-.ch-insight{display:none;background:rgba(224,26,0,.06);border:1px solid rgba(224,26,0,.15);padding:14px;margin-bottom:16px;}
-.ch-insight.open{display:block;animation:rslide .25s ease;}
-.ins-q{font-family:'Fraunces',serif;font-style:italic;font-size:.9rem;color:var(--orange2);margin-bottom:8px;line-height:1.5;}
-.ins-f{font-size:.74rem;color:rgba(255,255,255,.42);line-height:1.6;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);}
-.ch-acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.ch-btn{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.32);padding:8px 12px;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;-webkit-tap-highlight-color:transparent;min-height:36px;}
-.ch-btn:hover,.ch-btn:active{border-color:var(--orange);color:var(--orange);}
-.ch-btn.on-l{border-color:var(--red);color:var(--red);}
-.ch-btn.on-f{border-color:var(--orange);color:var(--orange);}
-.ch-btn-ins{margin-left:auto;background:var(--red);border-color:var(--red);color:white;}
-.ch-btn-ins:hover,.ch-btn-ins:active{background:var(--orange);border-color:var(--orange);color:white;}
-.ch-card.done .ch-lbl::after{content:' ✓';color:var(--orange);font-size:.65rem;}
-
-/* ── ACHIEVEMENTS ── */
-.ach-section{background:var(--black2);padding:60px 20px;border-top:1px solid rgba(255,255,255,.04);}
-.lvl-display{display:grid;grid-template-columns:1fr auto;align-items:start;gap:28px;margin-bottom:28px;}
-.lvl-name{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--white);letter-spacing:.04em;line-height:1;}
-.lvl-pts-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--orange);line-height:1;}
-.lvl-pts-lbl{font-size:.63rem;color:rgba(255,255,255,.25);letter-spacing:.18em;text-transform:uppercase;}
-.xp-bg{height:6px;background:rgba(255,255,255,.06);margin:0 0 10px;overflow:hidden;}
-.xp-fg{height:100%;background:linear-gradient(to right,var(--red),var(--orange));width:0%;transition:width 1.5s cubic-bezier(.4,0,.2,1);}
-.xp-lbls{display:flex;justify-content:space-between;font-size:.6rem;color:rgba(255,255,255,.18);letter-spacing:.08em;text-transform:uppercase;}
-.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px;}
-.bdg{border:1px solid rgba(255,255,255,.06);padding:22px 12px;text-align:center;filter:grayscale(1);opacity:.3;transition:all .4s;}
-.bdg.unlocked{filter:grayscale(0);opacity:1;border-color:rgba(255,106,0,.35);background:rgba(255,106,0,.04);}
-.bdg.unlocked:hover{border-color:var(--orange);}
-.bdg-ico{font-size:2rem;color:var(--orange);margin-bottom:10px;}
-.bdg-n{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.08em;margin-bottom:4px;}
-.bdg-d{font-size:.62rem;color:rgba(255,255,255,.28);line-height:1.5;}
-.bdg-req{margin-top:8px;font-size:.58rem;color:var(--orange);opacity:.7;}
-
-/* ── TOAST ── */
-.toast-stack{position:fixed;top:68px;right:14px;z-index:1100;display:flex;flex-direction:column;gap:7px;max-width:260px;}
-.toast{background:var(--black2);border-left:3px solid var(--orange);padding:10px 14px;font-size:.76rem;display:flex;align-items:center;gap:8px;animation:tin .3s ease,tout .3s ease 2.7s forwards;box-shadow:0 4px 20px rgba(0,0,0,.5);border-radius:0;}
-.toast i{color:var(--orange);font-size:.85rem;flex-shrink:0;}
-@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-@keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(20px)}}
-#cvc{position:fixed;inset:0;pointer-events:none;z-index:1200;}
-
-/* ── QUOTE / SHARE SECTION ── */
-.quote-share-section{background:var(--black);position:relative;overflow:hidden;}
-.quote-banner{background:linear-gradient(135deg,var(--red) 0%,#c01500 40%,var(--orange) 100%);padding:60px 20px;position:relative;overflow:hidden;text-align:center;}
-.quote-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");}
-.quote-banner::after{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;}
-.qb-eyebrow{font-size:.63rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;z-index:1;}
-.qb-eyebrow::before,.qb-eyebrow::after{content:'';flex:1;max-width:60px;height:1px;background:rgba(255,255,255,.3);}
-.quote-mark-big{font-family:'Fraunces',serif;font-size:7rem;color:rgba(255,255,255,.15);line-height:.6;display:block;margin-bottom:10px;position:relative;z-index:1;}
-.quote-text-main{font-family:'Fraunces',serif;font-size:clamp(1.3rem,3.5vw,2.2rem);font-style:italic;font-weight:300;color:var(--white);line-height:1.45;max-width:760px;margin:0 auto 20px;position:relative;z-index:1;letter-spacing:.01em;}
-.quote-text-main strong{font-weight:600;font-style:normal;}
-.quote-attr{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);position:relative;z-index:1;margin-bottom:36px;}
-.quote-dots{display:flex;justify-content:center;gap:8px;position:relative;z-index:1;margin-top:24px;}
-.qdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0;-webkit-tap-highlight-color:transparent;}
-.qdot.active{background:white;transform:scale(1.2);}
-
-/* ── SHARE BLOCK ── */
-.share-block{background:var(--black2);padding:50px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);}
-.share-eyebrow{font-size:.63rem;letter-spacing:.25em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;}
-.share-eyebrow::before,.share-eyebrow::after{content:'';flex:1;max-width:40px;height:1px;background:rgba(255,106,0,.4);}
-.share-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:.04em;margin-bottom:8px;}
-.share-title span{color:var(--orange);}
-.share-sub{font-family:'Fraunces',serif;font-size:.92rem;font-style:italic;font-weight:300;color:rgba(255,255,255,.4);margin-bottom:36px;max-width:420px;margin-left:auto;margin-right:auto;}
-.share-socials{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
-.soc-btn{display:flex;align-items:center;gap:8px;padding:12px 18px;border:none;cursor:pointer;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-decoration:none;transition:all .25s;white-space:nowrap;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);-webkit-tap-highlight-color:transparent;}
-.soc-btn i{font-size:.95rem;}
-.soc-btn:hover,.soc-btn:active{transform:translateY(-3px);filter:brightness(1.1);}
-.soc-wa{background:#25D366;color:#fff;}
-.soc-fb{background:#1877F2;color:#fff;}
-.soc-tw{background:#000;color:#fff;border:1px solid #333;}
-.soc-tk{background:#000;color:#fff;border:1px solid #333;position:relative;overflow:hidden;}
-.soc-tk::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#69C9D0,#EE1D52,#69C9D0);}
-.soc-ig{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;}
-.soc-li{background:#0077B5;color:#fff;}
-.soc-copy{background:var(--black3);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
-.soc-copy:hover,.soc-copy:active{background:var(--orange);color:white;border-color:var(--orange);}
-.share-copied{font-size:.72rem;color:var(--orange);letter-spacing:.08em;margin-top:8px;opacity:0;transition:opacity .3s;height:20px;}
-.share-copied.show{opacity:1;}
-
-/* ── WHATSAPP CARD ── */
-.wa-section{background:var(--black);padding:50px 20px;}
-.wa-card{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;background:var(--black2);border:1px solid rgba(255,255,255,.06);border-top:3px solid #25D366;overflow:hidden;}
-.wa-card-left{padding:36px;background:linear-gradient(135deg,rgba(37,211,102,.06),transparent);}
-.wa-card-right{padding:36px;border-left:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;justify-content:center;}
-.wa-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(37,211,102,.12);color:#25D366;font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(37,211,102,.2);margin-bottom:16px;}
-.wa-tag i{font-size:.88rem;}
-.wa-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.04em;line-height:1.1;color:var(--white);margin-bottom:10px;}
-.wa-title span{color:#25D366;}
-.wa-desc{font-size:.84rem;color:rgba(255,255,255,.45);line-height:1.7;font-family:'Fraunces',serif;font-style:italic;font-weight:300;margin-bottom:24px;}
-.wa-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
-.wa-features li{display:flex;align-items:center;gap:10px;font-size:.78rem;color:rgba(255,255,255,.6);}
-.wa-features li i{color:#25D366;font-size:.83rem;width:16px;text-align:center;}
-.wa-number-display{background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.15);padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.wa-num-icon{width:38px;height:38px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.wa-num-icon i{color:white;font-size:1rem;}
-.wa-num-info{flex:1;}
-.wa-num-label{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:3px;}
-.wa-num-value{font-size:.95rem;font-weight:600;color:var(--white);letter-spacing:.04em;}
-.btn-wa-chat{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#25D366;color:white;border:none;padding:15px;font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.1em;cursor:pointer;text-decoration:none;transition:all .3s;margin-bottom:10px;-webkit-tap-highlight-color:transparent;}
-.btn-wa-chat:hover,.btn-wa-chat:active{background:#1fb858;transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,211,102,.25);}
-.btn-wa-chat i{font-size:1.2rem;}
-.btn-wa-call{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);padding:12px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s;-webkit-tap-highlight-color:transparent;}
-.btn-wa-call:hover,.btn-wa-call:active{border-color:#25D366;color:#25D366;}
-.wa-online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#25D366;animation:blink 1.5s infinite;margin-right:5px;}
-.wa-status{font-size:.66rem;color:rgba(255,255,255,.25);letter-spacing:.05em;text-align:center;margin-top:10px;}
-
-/* ── FOOTER ── */
-footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);padding:40px 20px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;}
-.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.08em;margin-bottom:6px;}
-.foot-logo span{color:var(--orange);}
-.foot-sub{font-size:.74rem;color:rgba(255,255,255,.22);line-height:1.65;}
-.foot-copy{font-size:.6rem;color:rgba(255,255,255,.14);margin-top:8px;letter-spacing:.05em;}
-.foot-links{display:flex;gap:14px;flex-wrap:wrap;}
-.foot-links a{color:rgba(255,255,255,.22);text-decoration:none;font-size:.68rem;letter-spacing:.08em;transition:color .2s;-webkit-tap-highlight-color:transparent;}
-.foot-links a:hover{color:var(--orange);}
-
-/* ── MOBILE NAV LINKS ── */
-.nav-mobile-links{display:none;gap:12px;}
-
-/* ============================
-   RESPONSIVE — TABLETS (960px)
-============================ */
-@media(max-width:960px){
-  .hero{grid-template-columns:1fr;padding:80px 20px 50px;text-align:center;}
-  .hero::before{display:none;}
-  .hero-left{padding-right:0;margin-bottom:32px;}
-  .hero-sub{margin:14px auto 24px;}
-  .hero-btns{justify-content:center;}
-  .ch-grid{grid-template-columns:repeat(2,1fr);}
-  .rev-grid{grid-template-columns:1fr;}
-  .badges-grid{grid-template-columns:repeat(2,1fr);}
-  .rev-header{grid-template-columns:1fr;}
-  .agg-box{max-width:200px;}
-  .nav-links a.hide-sm{display:none;}
-}
-
-/* ============================
-   RESPONSIVE — PHONES (640px)
-============================ */
-@media(max-width:640px){
-  nav{padding:0 14px;height:56px;}
-  .nav-links{gap:8px;}
-  .nav-links a{display:none;}
-  .pts-pill{padding:4px 10px;font-size:.62rem;}
-
-  .hero{padding:72px 16px 44px;}
-  .hero-blob{width:280px;height:280px;top:10%;left:10%;}
-  .hero-title{font-size:clamp(2.6rem,12vw,4rem);}
-  .hero-sub{font-size:.92rem;}
-  .hero-btns{flex-direction:column;align-items:center;}
-  .btn-p,.btn-g{width:100%;max-width:300px;justify-content:center;padding:15px 20px;}
-
-  .book-cover-main{width:150px;height:220px;}
-  .thumb{width:65px;height:88px;}
-
-  .stats-bar{gap:8px;padding:10px 14px;}
-  .sblock{gap:8px;}
-  .snum{font-size:1.5rem;}
-  .slbl{font-size:.52rem;}
-  .ssep{display:none;}
-
-  .reviews-section{padding:44px 14px;}
-  .rev-header{grid-template-columns:1fr;gap:20px;}
-  .agg-box{max-width:100%;}
-  .rev-form-box{padding:20px 16px;}
-  .frow-2{grid-template-columns:1fr;}
-  .rev-big-title{font-size:clamp(2rem,8vw,3rem);}
-
-  .ch-section{padding:44px 14px;}
-  .ch-grid{grid-template-columns:1fr;}
-  .sec-head{flex-direction:column;align-items:flex-start;}
-  .prog-strip{width:100%;}
-  .ch-card{padding:20px 16px;}
-  .ch-acts{gap:6px;}
-  .ch-btn{padding:8px 10px;font-size:.62rem;}
-
-  .ach-section{padding:44px 14px;}
-  .badges-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
-  .lvl-display{gap:16px;}
-  .lvl-name{font-size:2rem;}
-  .lvl-pts-num{font-size:3rem;}
-
-  .quote-banner{padding:44px 16px;}
-  .quote-mark-big{font-size:5rem;}
-  .quote-text-main{font-size:clamp(1.1rem,5vw,1.6rem);}
-
-  .share-block{padding:40px 16px;}
-  .share-socials{gap:8px;}
-  .soc-btn{padding:10px 14px;font-size:.7rem;}
-  .soc-btn span{display:none;}
-
-  .wa-section{padding:40px 14px;}
-  .wa-card{grid-template-columns:1fr;}
-  .wa-card-left{padding:24px;}
-  .wa-card-right{border-left:none;border-top:1px solid rgba(255,255,255,.07);padding:24px;padding-top:24px;}
-
-  footer{grid-template-columns:1fr;}
-  .foot-links{justify-content:flex-start;}
-
-  .toast-stack{right:10px;max-width:240px;}
-  .toast{font-size:.72rem;}
-
-  .bdg{padding:16px 8px;}
-  .bdg-ico{font-size:1.6rem;}
-  .bdg-n{font-size:.8rem;}
-  .bdg-d{font-size:.58rem;}
-}
-
-/* ============================
-   RESPONSIVE — SMALL (400px)
-============================ */
-@media(max-width:400px){
-  .hero-title{font-size:clamp(2.3rem,11vw,3.5rem);}
-  .book-cover-main{width:130px;height:190px;}
-  .thumb{width:55px;height:76px;}
-  .thumb-txt{display:none;}
-  .badges-grid{grid-template-columns:1fr 1fr;}
-  .soc-btn{padding:9px 12px;}
-  .ch-btn-ins{margin-left:0;width:100%;}
-  .ch-acts{flex-direction:row;flex-wrap:wrap;}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <canvas id="cvc"></canvas>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cring"></div>
 <div class="toast-stack" id="toast-stack"></div>
+
+<!-- MODALS -->
+<!-- Buy Modal: Hard Copy -->
+<div class="modal-overlay" id="modal-hardcopy">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">GET THE <span>HARD COPY</span></div>
+      <button class="modal-close" onclick="closeModal('modal-hardcopy')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Order your physical copy of "Through the Lens of Keratoconus" directly from Victor. Pay via M-Pesa and receive delivery details on WhatsApp.</p>
+      <div class="wa-pay-info">
+        <div class="wa-pay-number">
+          <div class="wa-pay-icon"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <div style="font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:2px;">M-Pesa / Order via</div>
+            <div class="wa-pay-num-text">+254 112 127 975</div>
+          </div>
+        </div>
+        <div class="wa-pay-note">Send <strong>KSh 350</strong> via M-Pesa to <strong>0112127975</strong> (Victor M. Murega), then WhatsApp your payment confirmation + delivery address.</div>
+        <ul class="wa-pay-steps">
+          <li><i class="fas fa-check-circle"></i> Send KSh 350 via M-Pesa to 0112127975</li>
+          <li><i class="fas fa-check-circle"></i> Screenshot your M-Pesa confirmation</li>
+          <li><i class="fas fa-check-circle"></i> WhatsApp the screenshot + your address to +254 112 127 975</li>
+          <li><i class="fas fa-check-circle"></i> Victor will confirm & arrange delivery</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="btn-modal-primary" href="https://wa.me/254112127975?text=Hi%20Victor!%20I%27d%20like%20to%20order%20the%20hard%20copy%20of%20%22Through%20the%20Lens%20of%20Keratoconus%22.%20KSh%20350.%20I%20will%20send%20my%20M-Pesa%20confirmation." target="_blank" rel="noopener" style="text-decoration:none;text-align:center;">
+        <i class="fab fa-whatsapp"></i> &nbsp;ORDER ON WHATSAPP
+      </a>
+      <button class="btn-modal-ghost" onclick="closeModal('modal-hardcopy')">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Modal: eBook / PDF with Password -->
+<div class="modal-overlay" id="modal-ebook">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">GET THE <span>eBOOK</span></div>
+      <button class="modal-close" onclick="closeModal('modal-ebook')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="ebook-step-1">
+        <p class="modal-desc">Pay KSh 350 via M-Pesa to receive your PDF password. Once payment is confirmed, Victor will send your unique download password via WhatsApp.</p>
+        <div class="wa-pay-info">
+          <div class="wa-pay-number">
+            <div class="wa-pay-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div>
+              <div style="font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:2px;">M-Pesa Paybill / Send To</div>
+              <div class="wa-pay-num-text">0112127975</div>
+            </div>
+          </div>
+          <div class="wa-pay-note">Amount: <strong>KSh 350</strong> &nbsp;·&nbsp; Reference: <strong>EBOOK</strong></div>
+          <ul class="wa-pay-steps">
+            <li><i class="fas fa-check-circle"></i> Send KSh 350 to 0112127975 via M-Pesa</li>
+            <li><i class="fas fa-check-circle"></i> WhatsApp your M-Pesa code to +254 112 127 975</li>
+            <li><i class="fas fa-check-circle"></i> Receive your PDF password within minutes</li>
+            <li><i class="fas fa-check-circle"></i> Enter password below to unlock the PDF</li>
+          </ul>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px;">
+          <a class="btn-modal-primary" href="https://wa.me/254112127975?text=Hi%20Victor!%20I%27ve%20paid%20KSh%20350%20via%20M-Pesa%20for%20the%20eBook%20PDF%20of%20%22Through%20the%20Lens%20of%20Keratoconus%22.%20Please%20send%20me%20the%20password." target="_blank" rel="noopener" style="text-decoration:none;text-align:center;flex:1;">
+            <i class="fab fa-whatsapp"></i> &nbsp;SEND PAYMENT PROOF
+          </a>
+        </div>
+        <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,.06);padding-top:20px;">
+          <p style="font-size:.75rem;color:rgba(255,255,255,.35);margin-bottom:14px;letter-spacing:.04em;">Already have your password? Enter it below:</p>
+          <div class="modal-error" id="pdf-error"></div>
+          <div class="modal-success" id="pdf-success">✅ Password accepted! Your PDF is downloading...</div>
+          <div class="modal-input-wrap">
+            <label class="modal-label">Enter PDF Password</label>
+            <input type="password" class="modal-input" id="pdf-password-input" placeholder="Enter your password…" autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-primary" onclick="checkPDFPassword()">
+        <i class="fas fa-unlock-alt"></i> &nbsp;UNLOCK PDF
+      </button>
+      <button class="btn-modal-ghost" onclick="closeModal('modal-ebook')">CLOSE</button>
+    </div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav id="main-nav">
   <div class="nav-logo">LENS OF <span>KC</span></div>
   <div class="nav-links">
+    <a href="#buy-section" class="hide-sm">Get Book</a>
     <a href="#reviews-section">Reviews</a>
     <a href="#ch-section">Chapters</a>
-    <a href="#ach-section">Achievements</a>
+    <a href="#ach-section" class="hide-sm">Achievements</a>
     <div class="pts-pill"><i class="fas fa-bolt" style="font-size:.55rem"></i>&nbsp;<span id="nav-pts">0</span> PTS</div>
   </div>
 </nav>
@@ -432,52 +116,75 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
 <section class="hero">
   <div class="hero-blob"></div>
   <div class="hero-left">
-    <div class="hero-tag">Now Available &nbsp;·&nbsp; Memoir &nbsp;·&nbsp; 2025</div>
+    <div class="hero-tag">Now Available &nbsp;·&nbsp; Memoir &nbsp;·&nbsp; 2025-2026</div>
     <h1 class="hero-title">THROUGH<br>THE <span class="lo">LENS</span><br>OF <span class="lr">KERATOCONUS</span></h1>
     <p class="hero-sub">A journey of fear, faith, and resilience — told through the eyes of someone who nearly lost them.</p>
     <div class="hero-author">By <span>Victor M. Murega</span></div>
     <div class="hero-btns">
-      <a href="#reviews-section" class="btn-p">✍ Write a Review</a>
+      <a href="#buy-section" class="btn-p">📖 Get the Book</a>
       <a href="#ch-section" class="btn-g">Explore Chapters</a>
+      <a href="#buy-section" class="btn-p">GIVE YOUR REVIEWS/ASK QUESTIONS</a>
     </div>
   </div>
   <div class="hero-right">
   <div class="book-showcase">
 
-    <!-- Main Book Cover -->
     <div class="book-cover-main" id="main-book">
       <div class="book-pages"></div>
-      <div class="book-spine-txt"><span>THROUGH THE LENS OF KERATOCONUS</span></div>
-      <img class="cover-img" id="cover-img" src="assets/book-cover.jpg" alt="Book Cover">
+
+      <div class="book-spine-txt">
+        <span>THROUGH THE LENS OF KERATOCONUS</span>
+      </div>
+
+      <!-- Main Book Cover -->
+      <img class="cover-img" id="cover-img" src="images/book-cover.jpg" alt="Book Cover">
+
       <label class="cover-upload-lbl" id="cover-lbl">
-        <i class="fas fa-camera cover-ico"></i>
         <div class="cover-ttl">THROUGH THE<br>LENS OF<br>KERATOCONUS</div>
         <div class="cover-auth">Victor M. Murega</div>
-       
+        <div class="cover-hint">A Journey of fear, faith and resilience</div>
       </label>
+
       <div class="book-badge-circ">NEW<br>BOOK</div>
     </div>
 
-    <!-- Thumbnails / Interior & Back Cover -->
     <div class="thumb-stack">
+
+      <!-- Interior 1 -->
       <div class="thumb">
-        <img class="thumb-img" id="ti1" src="assets/interior1.jpg" alt="Interior 1">
-        <div class="thumb-lbl-inner"><i class="fas fa-image thumb-ico"></i><span class="thumb-txt">Interior 1</span></div>
+        <img class="thumb-img" id="ti1" src="images/interior1.jpg" alt="Interior Page 1">
+        <div class="thumb-lbl-inner">
+          <i class="fas fa-image thumb-ico"></i>
+          <span class="thumb-txt">Interior 1</span>
+        </div>
       </div>
+
+      <!-- Interior 2 -->
       <div class="thumb">
-        <img class="thumb-img" id="ti2" src="assets/interior2.jpg" alt="Interior 2">
-        <div class="thumb-lbl-inner"><i class="fas fa-image thumb-ico"></i><span class="thumb-txt">Interior 2</span></div>
+        <img class="thumb-img" id="ti2" src="images/interior2.jpg" alt="Interior Page 2">
+        <div class="thumb-lbl-inner">
+          <i class="fas fa-image thumb-ico"></i>
+          <span class="thumb-txt">Interior 2</span>
+        </div>
       </div>
+
+      <!-- Back Cover -->
       <div class="thumb">
-        <img class="thumb-img" id="ti3" src="assets/back-cover.jpg" alt="Back Cover">
-        <div class="thumb-lbl-inner"><i class="fas fa-image thumb-ico"></i><span class="thumb-txt">Back Cover</span></div>
+        <img class="thumb-img" id="ti3" src="book copies.jpg"" alt="Back Cover">
+        <div class="thumb-lbl-inner">
+          <i class="fas fa-image thumb-ico"></i>
+          <span class="thumb-txt">Back Cover</span>
+        </div>
       </div>
+
     </div>
 
   </div>
+</div>
 
-  <!-- Hero scroll indicator -->
-  <div class="hero-scroll"><span>Scroll</span><div class="scroll-dot"></div></div>
+<div class="hero-scroll">
+  <span>Scroll</span>
+  <div class="scroll-dot"></div>
 </div>
 </section>
 
@@ -494,6 +201,8 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
   <div class="sblock"><div class="snum">KE</div><div class="slbl">Kenya<br>Origin</div></div>
 </div>
 
+
+
 <!-- REVIEWS -->
 <section id="reviews-section" class="reviews-section">
   <div class="rev-header">
@@ -507,7 +216,7 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
       <div class="agg-stars" id="agg-stars">
         <i class="fas fa-star dim"></i><i class="fas fa-star dim"></i><i class="fas fa-star dim"></i><i class="fas fa-star dim"></i><i class="fas fa-star dim"></i>
       </div>
-      <div class="agg-ct" id="agg-ct">No reviews yet</div>
+      <div class="agg-ct" id="agg-ct">16 reviews </div>
     </div>
   </div>
   <div class="rev-grid">
@@ -523,8 +232,7 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
           </div>
           <div>
             <label class="flbl">Format *</label>
-            <label for="inp-type" class="flbl sr-only">Format</label>
-            <select class="fsel" name="type" id="inp-type" aria-labelledby="inp-type-label">
+            <select class="fsel" name="type" id="inp-type">
               <option value="">Select…</option>
               <option value="hard-copy">📖 Hard Copy</option>
               <option value="ebook">💻 eBook/PDF</option>
@@ -547,6 +255,7 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
           </div>
           <input type="hidden" name="rating" id="rev-rating">
         </div>
+        <button type="button" class="rcard-vote" data-idx="0">...</button>
         <button type="submit" class="btn-submit" id="btn-submit">SUBMIT REVIEW &nbsp;→</button>
       </form>
     </div>
@@ -557,23 +266,262 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
   </div>
 </section>
 
-<!-- CHAPTERS -->
+<!-- CHAPTERS —  -->
 <section id="ch-section" class="ch-section">
-  <button class="ch-btn" data-action="like" data-id="3">
-  <i class="fas fa-heart"></i>
-  <span class="btn-text-like">Like</span>
-</button>
   <div class="sec-head">
     <div>
       <div class="sec-eyebrow">The Book</div>
-      <h2 class="sec-h2">JOURNEY THROUGH<br>THE PAGES</h2>
+      <h2 class="sec-h2">JOURNEY <span>THROUGH</span> <br>THE PAGES</h2>
     </div>
     <div class="prog-strip">
       <div class="prog-bg"><div class="prog-fg" id="prog-fg"></div></div>
       <div class="prog-pct" id="prog-pct">0%</div>
     </div>
   </div>
-  <div class="ch-grid" id="ch-grid"></div>
+
+  <div class="ch-grid" id="ch-grid">
+
+    <!-- ── CHAPTER 1 ── -->
+    <div class="ch-card" id="chc-1">
+      <div class="ch-bignum">01</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 01</span>
+        The Unseen Struggle
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">The Unseen Struggle</div>
+      <div class="ch-sub">Understanding Keratoconus</div>
+      <p class="ch-excerpt">
+        Keratoconus is a silent deformer of sight — it does not come like a storm, loud and visible. It arrives like a whisper in the dark, gradually stealing clarity, reshaping the world into shadows and fog.
+      </p>
+      <div class="ch-insight" id="ins-1">
+        <div class="ins-inner">
+          <div class="ins-q">"In brokenness, I found my vision — not in sight, but in strength."</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>Diagnosis typically takes years of misdiagnosis. Most patients are first told they simply need stronger glasses — it wasn't until a corneal topography scan mapped Victor's cornea like a satellite image that the truth finally surfaced.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="1">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="1">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="1">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CHAPTER 2 ── -->
+    <div class="ch-card" id="chc-2">
+      <div class="ch-bignum">02</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 02</span>
+        The Classroom Battle
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">The Classroom Battle</div>
+      <div class="ch-sub">Struggling with Keratoconus in School</div>
+      <p class="ch-excerpt">
+        School became a battlefield. The blackboard blurred, letters danced, and words refused to stay still. No matter how close I sat, clarity never came — and the silence around my struggle was deafening.
+      </p>
+      <div class="ch-insight" id="ins-2">
+        <div class="ins-inner">
+          <div class="ins-q">"My grace is sufficient for you, for My power is made perfect in weakness." — 2 Corinthians 12:9</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>Academic decline from undiagnosed KC is often labelled as laziness or a learning disability. Victor once sat frozen as his teacher called on him to read — unable to see the page, met with laughter and pity he never asked for.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="2">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="2">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="2">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CHAPTER 3 ── -->
+    <div class="ch-card" id="chc-3">
+      <div class="ch-bignum">03</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 03</span>
+        A Heavy Burden
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">A Heavy Burden</div>
+      <div class="ch-sub">The Financial & Emotional Costs</div>
+      <p class="ch-excerpt">
+        The diagnostic tests alone consumed the family's resources. Specialist fees, travel, contact lens consultations — the invisible tax of chronic illness piled high, and still the most needed treatments stayed out of reach.
+      </p>
+      <div class="ch-insight" id="ins-3">
+        <div class="ins-inner">
+          <div class="ins-q">"Healing is as much about the heart as it is about the eyes."</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>In Kenya, KC specialists are concentrated in Nairobi, making costs prohibitive for many families. Corneal cross-linking was both expensive and medically inadvisable for Victor's already advanced case — leaving surgery as the only road forward.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="3">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="3">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="3">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CHAPTER 4 ── -->
+    <div class="ch-card" id="chc-4">
+      <div class="ch-bignum">04</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 04</span>
+        A Fight for Sight
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">A Fight for Sight</div>
+      <div class="ch-sub">The Journey to a Corneal Transplant</div>
+      <p class="ch-excerpt">
+        Preparing for a corneal transplant is a path of faith walked in near-total darkness. When the call finally came — after years on a waiting list, through COVID lockdowns — it arrived on an ordinary day and changed everything.
+      </p>
+      <div class="ch-insight" id="ins-4">
+        <div class="ins-inner">
+          <div class="ins-q">"Your word is a lamp to my feet and a light to my path." — Psalm 119:105</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>In Kenya, donor corneas are rare and often imported. COVID-19 further delayed surgeries as borders closed and elective procedures were postponed indefinitely — leaving Victor waiting, again, in worsening darkness.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="4">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="4">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="4">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CHAPTER 5 ── -->
+    <div class="ch-card" id="chc-5">
+      <div class="ch-bignum">05</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 05</span>
+        The Road to Recovery
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">The Road to Recovery</div>
+      <div class="ch-sub">Living with a Transplanted Cornea</div>
+      <p class="ch-excerpt">
+        Waking after surgery, the weight of bandages pressing gently — a quiet reminder that something inside had changed forever. Recovery is not merely physical. It is a long, slow renegotiation with who you are.
+      </p>
+      <div class="ch-insight" id="ins-5">
+        <div class="ins-inner">
+          <div class="ins-q">"When darkness clouds the eyes, light shines within the heart."</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>Post-transplant patients require years of vigilant monitoring. Rejection can occur even a decade later. Daily eye drops are not optional — one missed dose can trigger inflammation that risks losing the transplanted cornea entirely.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="5">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="5">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="5">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CHAPTER 6 ── -->
+    <div class="ch-card" id="chc-6">
+      <div class="ch-bignum">06</div>
+      <div class="ch-lbl">
+        <span class="ch-lbl-num">CH 06</span>
+        Through New Eyes
+        <span class="ch-done-check"><i class="fas fa-check"></i></span>
+      </div>
+      <div class="ch-title">Through New Eyes</div>
+      <div class="ch-sub">Reflection, Lessons & Life Beyond</div>
+      <p class="ch-excerpt">
+        This journey deepened my empathy beyond measure. Keratoconus didn't just challenge my vision — it reshaped my entire perspective. To see clearly now is to understand how precious the gift truly was all along.
+      </p>
+      <div class="ch-insight" id="ins-6">
+        <div class="ins-inner">
+          <div class="ins-q">"This journey is more than what the eye can see."</div>
+          <div class="ins-divider"></div>
+          <div class="ins-f">
+            <i class="fas fa-lightbulb ins-f-icon"></i>
+            <span>Resilience is not the absence of pain — it is the decision to find purpose within it. Victor's story became a mission: to speak, to write, to shed light so that others would not walk blindly into the same storm alone.</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-acts">
+        <button type="button" class="ch-btn-like" data-id="6">
+          <i class="fas fa-heart"></i>
+          <span class="like-txt">Like</span>
+          <span class="like-ct"></span>
+        </button>
+        <button type="button" class="ch-btn-save" data-id="6">
+          <i class="fas fa-bookmark"></i>
+          <span class="save-txt">Save</span>
+        </button>
+        <button type="button" class="ch-btn-ins" data-id="6">
+          <i class="fas fa-eye"></i>
+          <span class="ins-txt">Read Insight</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.ch-grid -->
 </section>
 
 <!-- ACHIEVEMENTS -->
@@ -616,15 +564,16 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
     <div class="bdg" id="badge-champion">
       <div class="bdg-ico"><i class="fas fa-crown"></i></div>
       <div class="bdg-n">CHAMPION</div>
-      <div class="bdg-d">Mastered every chapter & milestone</div>
+      <div class="bdg-d">Mastered every chapter &amp; milestone</div>
       <div class="bdg-req">150 pts required</div>
     </div>
   </div>
 </section>
 
+
+
 <!-- QUOTE / SHARE / WHATSAPP -->
 <div class="quote-share-section">
-
   <div class="quote-banner">
     <div class="qb-eyebrow">Words That Move</div>
     <span class="quote-mark-big">"</span>
@@ -632,23 +581,21 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
     <div class="quote-attr">— Victor M. Murega, Through the Lens of Keratoconus</div>
     <div class="quote-dots" id="quote-dots"></div>
   </div>
-
   <div class="share-block">
     <div class="share-eyebrow">Spread the Story</div>
     <h2 class="share-title">SHARE THIS <span>JOURNEY</span></h2>
     <p class="share-sub">Help others discover Victor's story of faith, sight, and resilience. Every share matters.</p>
     <div class="share-socials">
-      <a class="soc-btn soc-wa"  href="#" onclick="shareWA();return false;"><i class="fab fa-whatsapp"></i> <span>WhatsApp</span></a>
-      <a class="soc-btn soc-fb"  href="#" onclick="shareFB();return false;"><i class="fab fa-facebook-f"></i> <span>Facebook</span></a>
-      <a class="soc-btn soc-tw"  href="#" onclick="shareTW();return false;"><i class="fa-brands fa-x-twitter"></i> <span>X / Twitter</span></a>
-      <a class="soc-btn soc-tk"  href="#" onclick="shareTK();return false;"><i class="fab fa-tiktok"></i> <span>TikTok</span></a>
-      <a class="soc-btn soc-ig"  href="#" onclick="shareIG();return false;"><i class="fab fa-instagram"></i> <span>Instagram</span></a>
-      <a class="soc-btn soc-li"  href="#" onclick="shareLI();return false;"><i class="fab fa-linkedin-in"></i> <span>LinkedIn</span></a>
+      <a class="soc-btn soc-wa" href="#" onclick="shareWA();return false;"><i class="fab fa-whatsapp"></i> <span>WhatsApp</span></a>
+      <a class="soc-btn soc-fb" href="#" onclick="shareFB();return false;"><i class="fab fa-facebook-f"></i> <span>Facebook</span></a>
+      <a class="soc-btn soc-tw" href="#" onclick="shareTW();return false;"><i class="fa-brands fa-x-twitter"></i> <span>X / Twitter</span></a>
+      <a class="soc-btn soc-tk" href="#" onclick="shareTK();return false;"><i class="fab fa-tiktok"></i> <span>TikTok</span></a>
+      <a class="soc-btn soc-ig" href="#" onclick="shareIG();return false;"><i class="fab fa-instagram"></i> <span>Instagram</span></a>
+      <a class="soc-btn soc-li" href="#" onclick="shareLI();return false;"><i class="fab fa-linkedin-in"></i> <span>LinkedIn</span></a>
       <button class="soc-btn soc-copy" onclick="copyLink()"><i class="fas fa-link"></i> <span>Copy Link</span></button>
     </div>
     <div class="share-copied" id="share-copied">✓ Link copied to clipboard!</div>
   </div>
-
   <div class="wa-section">
     <div class="wa-card">
       <div class="wa-card-left">
@@ -658,7 +605,7 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
         <ul class="wa-features">
           <li><i class="fas fa-check-circle"></i> Bulk &amp; group orders</li>
           <li><i class="fas fa-check-circle"></i> Speaking engagements</li>
-          <li><i class="fas fa-check-circle"></i> KC awareness partnerships</li>
+          <li><i class="fas fa-check-circle"></i> KeratoConus awareness partnerships</li>
           <li><i class="fas fa-check-circle"></i> Personal encouragement &amp; Q&amp;A</li>
           <li><i class="fas fa-check-circle"></i> Media &amp; press inquiries</li>
         </ul>
@@ -668,12 +615,13 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
           <div class="wa-num-icon"><i class="fab fa-whatsapp"></i></div>
           <div class="wa-num-info">
             <div class="wa-num-label">WhatsApp Number</div>
-            <div class="wa-num-value">+254 112 127 975</div>
+            <div class="wa-num-value">+254 11*****975</div>
           </div>
         </div>
         <a class="btn-wa-chat" href="https://wa.me/254112127975?text=Hi%20Victor!%20I%20just%20read%20about%20%22Through%20the%20Lens%20of%20Keratoconus%22%20and%20would%20love%20to%20chat." target="_blank" rel="noopener">
           <i class="fab fa-whatsapp"></i> START A CONVERSATION
         </a>
+        
         <a class="btn-wa-call" href="tel:+254112127975">
           <i class="fas fa-phone"></i> Call Victor Instead
         </a>
@@ -681,24 +629,81 @@ footer{background:var(--black2);border-top:1px solid rgba(255,255,255,.05);paddi
       </div>
     </div>
   </div>
-
 </div>
-
+<!-- BUY BOOK SECTION -->
+<section id="buy-section" class="buy-section">
+  <div class="buy-inner">
+    <div class="buy-header">
+      <div class="buy-eyebrow"><i class="fas fa-book"></i> Get Your Copy</div>
+      <h2 class="buy-title">OWN THE <span>STORY</span></h2>
+      <p class="buy-sub">Choose your format — a physical copy you can hold, or an eBook you can read anywhere. Both available for only KSh 350.</p>
+    </div>
+    <div class="buy-cards">
+      <!-- Hard Copy Card -->
+      <div class="buy-card featured" onclick="openModal('modal-hardcopy')">
+        <div class="buy-card-badge">Most Popular</div>
+        <span class="buy-card-icon">📖</span>
+        <div class="buy-card-title">Hard Copy</div>
+        <div class="buy-card-price">KSh 350 <small>/ copy</small></div>
+        <ul class="buy-card-features">
+          <li><i class="fas fa-check"></i> Physical printed book</li>
+          <li><i class="fas fa-check"></i> Delivery across Kenya</li>
+          <li><i class="fas fa-check"></i> Personally signed option available</li>
+          <li><i class="fas fa-check"></i> Perfect as a gift</li>
+          <li><i class="fas fa-check"></i> Order via WhatsApp</li>
+        </ul>
+        <button class="btn-buy" onclick="openModal('modal-hardcopy')">
+          <i class="fas fa-shopping-cart"></i> &nbsp;ORDER HARD COPY
+        </button>
+      </div>
+      <!-- eBook Card -->
+      <div class="buy-card" onclick="openModal('modal-ebook')">
+        <span class="buy-card-icon">💻</span>
+        <div class="buy-card-title">eBook / PDF</div>
+        <div class="buy-card-price">KSh 350 <small>/ download</small></div>
+        <ul class="buy-card-features">
+          <li><i class="fas fa-check"></i> Instant PDF download</li>
+          <li><i class="fas fa-check"></i> Read on any device</li>
+          <li><i class="fas fa-check"></i> Password-protected copy</li>
+          <li><i class="fas fa-check"></i> Pay M-Pesa, get password via WhatsApp</li>
+          <li><i class="fas fa-check"></i> Full book — all 6 chapters</li>
+        </ul>
+        <button class="btn-buy-ghost" onclick="openModal('modal-ebook')">
+          <i class="fas fa-download"></i> &nbsp;GET eBOOK PDF
+        </button>
+      </div>
+    </div>
+    <div class="buy-payment-info">
+      <i class="fab fa-whatsapp"></i>
+      <div class="buy-payment-txt">
+        All purchases are processed manually via <strong>M-Pesa</strong> and coordinated through <strong>WhatsApp (+254 112 127 975)</strong>. 
+        After payment, Victor personally confirms and fulfills your order — usually within a few hours. 
+        For bulk orders (5+ copies) or speaking engagements, message Victor directly for special pricing.
+      </div>
+    </div>
+  </div>
+</section>
 <!-- FOOTER -->
 <footer>
   <div>
-    <div class="foot-logo">THROUGH THE <span>LENS</span></div>
-    <div class="foot-sub">A memoir by Victor M. Murega · Nairobi, Kenya<br>muregavictor24@gmail.com &nbsp;·&nbsp; +254 112 127 975</div>
+    <div class="foot-logo">THROUGH THE <span>LENS</span> <BR>OF <span>KERATOCONUS</span></div>
+    <div class="foot-sub">A memoir by Victor M. Murega · Nairobi, Kenya<br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9cf1e9eef9fbfdeaf5ffe8f3eeaea8dcfbf1fdf5f0b2fff3f1">[email&#160;protected]</a> &nbsp;·&nbsp; +254 1******75</div>
     <div class="foot-copy">&copy; 2025 Victor M. Murega. All Rights Reserved.</div>
   </div>
   <div class="foot-links">
+    <a href="#buy-section">Get Book</a>
     <a href="#reviews-section">Reviews</a>
     <a href="#ch-section">Chapters</a>
     <a href="#ach-section">Achievements</a>
-    <a href="mailto:muregavictor24@gmail.com">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#9af7efe8fffdfbecf3f9eef5e8a8aedafdf7fbf3f6b4f9f5f7">Contact</a>
   </div>
 </footer>
-
+<!-- Firebase SDKs -->
+ 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="script.js" defer></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script></script>
 </body>
 </html>
