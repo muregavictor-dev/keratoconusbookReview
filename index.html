@@ -235,7 +235,13 @@
       <div class="agg-ct" id="agg-ct">16 reviews </div>
     </div>
   </div>
- <div class="rev-grid">
+ 
+<!--
+  Replace the _next value below with your actual page URL.
+  When JS is disabled, Formspree redirects there after submission.
+  When JS is enabled, e.preventDefault() fires and this redirect never happens.
+-->
+<div class="rev-grid">
 
   <!-- ── LEFT COL: Review Form ── -->
   <div class="rev-form-box">
@@ -249,8 +255,8 @@
       method="POST"
       novalidate
     >
-      <!-- Formspree control fields -->
-      <input type="hidden" name="_next"    value="https://yourdomain.com/?thanks=1">
+      <!-- Replace the _next value with your real page URL e.g. https://victorkc.com/?thanks=1 -->
+      <input type="hidden" name="_next"    value="https://throughthelensofkeratoconuskook-rev.vercel.app/">
       <input type="text"   name="_gotcha"  style="display:none" tabindex="-1" autocomplete="off">
       <input type="hidden" name="_subject" value="New book review — Through the Lens of Keratoconus">
 
