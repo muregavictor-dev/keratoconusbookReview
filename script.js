@@ -441,42 +441,42 @@ if(reviewForm){
       date: new Date().toISOString()
     };
 
-
-    // ── Step 1: Update local state and UI immediately ──
-    // Done BEFORE the async Firebase push so that no error from renderRevs()
-    // or addPts() can bubble into the Firebase .catch() and show a false
-    // "Error submitting" message when the submission actually succeeded.
-    reviews.unshift({
-      ...newReview,
-      _isoDate: newReview.date, // used by child_added listener to skip this duplicate
-      date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-      votes: 0
-    });
-    save();
-    renderRevs();
-    resetReviewForm();
-    sucEl.classList.add('show');
-    setTimeout(()=>sucEl.classList.remove('show'),4500);
-    addPts(10,'Review submitted');
-    submitting=false;
-    if(btn){btn.innerHTML='SUBMIT REVIEW \u00a0\u2192';btn.style.opacity='1';}
-
-    // ── Step 2: Push to Firebase in the background ──
+    // ── Step 1: Push to Firebase ──
     db.ref('reviews').push(newReview)
       .then(() => {
-        console.log('Firebase: review saved successfully.');
-        // ── Step 3: Mirror to Formspree (fire-and-forget) ──
+
+        // ── Step 2: Mirror the POST to Formspree (fire-and-forget; non-blocking) ──
+        // We do NOT await this — email notification is best-effort.
+        // If Formspree fails it doesn't affect the user experience.
         sendToFormspree(name, type, text, rating)
           .then(res => {
-            if(res.ok) console.log('Formspree: email sent successfully.');
+            if(res.ok) console.log('Formspree email sent successfully!');
             else        console.warn('Formspree responded with:', res.status, res.statusText);
           })
           .catch(err => console.error('Formspree network error:', err));
+
+        // ── Step 3: Update local state and UI ──
+        reviews.unshift({
+          ...newReview,
+          date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+          votes: 0
+        });
+        save();
+        renderRevs();
+        resetReviewForm();
+
+        sucEl.classList.add('show');
+        setTimeout(()=>sucEl.classList.remove('show'),4500);
+        addPts(10,'Review submitted');
+        submitting=false;
+        if(btn){btn.innerHTML='SUBMIT REVIEW &nbsp;\u2192';btn.style.opacity='1';}
       })
-      .catch(err => {
-        // Firebase failed but the user already saw the success message and
-        // the review is stored locally — just log it silently.
-        console.error('Firebase push error (review shown locally):', err);
+      .catch(err=>{
+        console.error('Firebase submit error:', err);
+        errEl.textContent='Error submitting review. Please try again.';
+        errEl.classList.add('show');
+        submitting=false;
+        if(btn){btn.innerHTML='SUBMIT REVIEW &nbsp;\u2192';btn.style.opacity='1';}
       });
   });
 }
@@ -495,23 +495,21 @@ if(reviewForm){
   });
 })();
 
-// Listen for new reviews added by OTHER users in real-time.
-// Uses a flag to skip the initial batch (already loaded via .once() below).
-// Dedup key is the raw ISO date string from Firebase — unique per submission.
+// Listen for new reviews in real-time
+// Uses a flag to skip the very first batch (already loaded via .once() below)
 let initialLoadDone = false;
 db.ref('reviews').on('child_added', snapshot => {
-  if(!initialLoadDone) return; // initial batch handled by .once()
+  if(!initialLoadDone) return; // ignore — handled by .once() on init
   const r = snapshot.val();
-  // Skip if this exact ISO timestamp is already in local reviews
-  // (i.e. the current user just submitted it — already added locally in Step 1)
-  if(reviews.some(rev => rev._isoDate === r.date && rev.name === r.name)) return;
-  reviews.unshift({
-    ...r,
-    _isoDate: r.date, // store raw ISO for future dedup checks
-    date: new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-    votes: r.votes||0
-  });
-  renderRevs();
+  // Avoid duplicates: skip if same name + ISO date already present
+  if(!reviews.some(review => review.date === new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) && review.name === r.name)){
+    reviews.unshift({
+      ...r,
+      date: new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+      votes: r.votes||0
+    });
+    renderRevs();
+  }
 });
 
 // ─── RENDER REVIEWS ───
