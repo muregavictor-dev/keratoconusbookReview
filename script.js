@@ -282,10 +282,9 @@ function handleLike(btn){
     toast('Removed like from Chapter '+id,'fas fa-heart-broken');
   } else {
     liked.add(id);
-    btn.classList.add('on-l');
     btn.classList.remove('burst');
     void btn.offsetWidth;
-    btn.classList.add('burst');
+    btn.classList.add('on-l','burst');
     if(txt) txt.textContent='Liked';
     spawnHeart(btn);
     addPts(3,'Liked Chapter '+id);
@@ -377,6 +376,17 @@ if(revTxt){
   });
 }
 
+// ─── HELPER: reset the review form UI ───
+function resetReviewForm(){
+  if(reviewForm) reviewForm.reset();
+  rval=0;
+  stars.forEach(s=>s.classList.remove('on'));
+  const ri=document.getElementById('rev-rating');
+  if(ri) ri.value='';
+  const cc=document.getElementById('char-ct');
+  if(cc) cc.textContent='0';
+}
+
 // ─── REVIEW FORM SUBMIT ───
 const reviewForm=document.getElementById('review-form');
 if(reviewForm){
@@ -411,103 +421,77 @@ if(reviewForm){
     const btn=document.getElementById('btn-submit');
     if(btn){btn.textContent='SUBMITTING…';btn.style.opacity='.7';}
 
-    setTimeout(()=>{
-      reviews.unshift({
-        name,type,review:text,rating,
-        date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-        votes:0
+    // Build the review object once
+    const newReview = {
+      name,
+      type,
+      review: text,
+      rating,
+      date: new Date().toISOString()
+    };
+
+    // ── Push to Firebase (single source of truth) ──
+    db.ref('reviews').push(newReview)
+      .then(() => {
+        // Send email notification via Formspree
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('type', type);
+        formData.append('review', text);
+        formData.append('rating', rating);
+
+        fetch('https://formspree.io/f/xlgplvde', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(res => {
+          if(res.ok){
+            console.log('Formspree email sent successfully!');
+          } else {
+            console.warn('Formspree error:', res.statusText);
+          }
+        })
+        .catch(err => console.error('Formspree network error:', err));
+
+        // Add to local reviews array for immediate UI update
+        reviews.unshift({
+          ...newReview,
+          date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+          votes: 0
+        });
+        save();
+        renderRevs();
+        resetReviewForm();
+
+        sucEl.classList.add('show');
+        setTimeout(()=>sucEl.classList.remove('show'),4500);
+        addPts(10,'Review submitted');
+        submitting=false;
+        if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
+      })
+      .catch(err=>{
+        console.error('Firebase submit error:', err);
+        errEl.textContent = 'Error submitting review. Please try again.';
+        errEl.classList.add('show');
+        submitting=false;
+        if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
       });
-      save();
-      renderRevs();
-      // --- FORMSPREE EMAIL ---
-
-
-// Reset form
-      reviewForm.reset();
-      rval=0;
-      stars.forEach(s=>s.classList.remove('on'));
-      const ri=document.getElementById('rev-rating');
-      if(ri) ri.value='';
-      const cc=document.getElementById('char-ct');
-      if(cc) cc.textContent='0';
-      sucEl.classList.add('show');
-      setTimeout(()=>sucEl.classList.remove('show'),4500);
-      addPts(10,'Review submitted');
-      submitting=false;
-      if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
-    },600);
-
-    // Push review to Firebase
-const newReview = {
-  name,
-  type,
-  review: text,
-  rating,
-  date: new Date().toISOString()
-};
-
-db.ref('reviews').push(newReview)
-  .then(() => {
-    // Also keep it in local reviews for immediate rendering
-    reviews.unshift({
-      ...newReview,
-      date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-      votes:0
-    });
-    const formData = new FormData();
-formData.append('name', name);
-formData.append('type', type);
-formData.append('review', text);
-formData.append('rating', rating);
-
-fetch('https://formspree.io/f/xlgplvde', {
-  method: 'POST',
-  body: formData,
-  headers: { 'Accept': 'application/json' }
-})
-.then(res => {
-  if(res.ok){
-    console.log('Formspree email sent successfully!');
-  } else {
-    console.warn('Formspree error:', res.statusText);
-  }
-})
-.catch(err => console.error('Formspree network error:', err));
-    renderRevs();
-    reviewForm.reset();
-    rval=0;
-    stars.forEach(s=>s.classList.remove('on'));
-    const ri=document.getElementById('rev-rating');
-    if(ri) ri.value='';
-    const cc=document.getElementById('char-ct');
-    if(cc) cc.textContent='0';
-    sucEl.classList.add('show');
-    setTimeout(()=>sucEl.classList.remove('show'),4500);
-    addPts(10,'Review submitted');
-    submitting=false;
-    if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
-  })
-  .catch(err=>{
-    console.error('Firebase submit error:', err);
-    errEl.textContent = 'Error submitting review. Please try again.';
-    errEl.classList.add('show');
-    submitting=false;
-    if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
-  });
   });
 }
 
 // Listen for new reviews in real-time
+// Uses a flag to skip the very first batch (already loaded via .once() below)
+let initialLoadDone = false;
 db.ref('reviews').on('child_added', snapshot => {
+  if(!initialLoadDone) return; // ignore — handled by .once() on init
   const r = snapshot.val();
-  
-  // Check if this review is already in our local array (by timestamp)
-  if (!reviews.some(review => review.date === r.date && review.name === r.name)) {
-    // Add to the top of the local reviews array
+  // Avoid duplicates: skip if same name + ISO date already present
+  if(!reviews.some(review => review.date === new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) && review.name === r.name)){
     reviews.unshift({
       ...r,
       date: new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-      votes: 0
+      votes: r.votes||0
     });
     renderRevs();
   }
@@ -726,12 +710,15 @@ updateAll();
 db.ref('reviews').once('value')
   .then(snapshot => {
     const data = snapshot.val();
-    if(!data) return;
+    if(!data) {
+      initialLoadDone = true;
+      return;
+    }
 
     // Reset local reviews array
     reviews = [];
 
-    // Convert Firebase object to array
+    // Convert Firebase object to array, preserving votes
     Object.values(data).forEach(r => {
       reviews.push({
         name: r.name,
@@ -739,14 +726,19 @@ db.ref('reviews').once('value')
         review: r.review,
         rating: r.rating,
         date: new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-        votes: 0  // optional, you can add vote logic later
+        votes: r.votes||0
       });
     });
 
     // Render reviews
     renderRevs();
+    // Now allow child_added listener to process only future additions
+    initialLoadDone = true;
   })
-  .catch(err => console.error('Firebase load error:', err));
+  .catch(err => {
+    console.error('Firebase load error:', err);
+    initialLoadDone = true;
+  });
 
 // Animate progress bars on scroll
 const observer=new IntersectionObserver((entries)=>{
