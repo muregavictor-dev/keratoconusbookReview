@@ -715,6 +715,29 @@
     <a href="/cdn-cgi/l/email-protection#9af7efe8fffdfbecf3f9eef5e8a8aedafdf7fbf3f6b4f9f5f7">Contact</a>
   </div>
 </footer>
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCJdh5Z2l16Bp9AMSMbrT9E0mqHCVaOhvA",
+    authDomain: "book-database-e9665.firebaseapp.com",
+    projectId: "book-database-e9665",
+    storageBucket: "book-database-e9665.firebasestorage.app",
+    messagingSenderId: "974555897450",
+    appId: "1:974555897450:web:ae51b69fb6228bcf63f413",
+    measurementId: "G-VDP2WX97XR"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 <!-- Firebase SDKs -->
  
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
