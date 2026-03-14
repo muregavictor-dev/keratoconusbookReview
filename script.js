@@ -378,65 +378,96 @@ if(revTxt){
 }
 
 // ─── REVIEW FORM SUBMIT ───
-const reviewForm=document.getElementById('review-form');
-if(reviewForm){
-  reviewForm.addEventListener('submit',function(e){
+const reviewForm = document.getElementById('review-form');
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    if(submitting) return;
+    if (submitting) return;
 
-    const errEl=document.getElementById('form-error');
-    const sucEl=document.getElementById('form-success');
+    const errEl = document.getElementById('form-error');
+    const sucEl = document.getElementById('form-success');
     errEl.classList.remove('show');
     sucEl.classList.remove('show');
 
-    const name=(document.getElementById('inp-name').value||'').trim();
-    const type=(document.getElementById('inp-type').value||'').trim();
-    const text=revTxt?(revTxt.value||'').trim():'';
-    const rating=parseInt(document.getElementById('rev-rating').value||'0',10);
+    const name = (document.getElementById('inp-name').value || '').trim();
+    const type = (document.getElementById('inp-type').value || '').trim();
+    const text = revTxt ? (revTxt.value || '').trim() : '';
+    const rating = parseInt(document.getElementById('rev-rating').value || '0', 10);
 
-    const errors=[];
-    if(!name) errors.push('Your name is required.');
-    if(!type) errors.push('Please select a format (Hard Copy / eBook).');
-    if(!text||text.length<10) errors.push('Please write at least 10 characters in your review.');
-    if(!rating||rating<1) errors.push('Please select a star rating (1–5).');
+    const errors = [];
+    if (!name) errors.push('Your name is required.');
+    if (!type) errors.push('Please select a format (Hard Copy / eBook).');
+    if (!text || text.length < 10) errors.push('Please write at least 10 characters in your review.');
+    if (!rating || rating < 1) errors.push('Please select a star rating (1–5).');
 
-    if(errors.length){
-      errEl.innerHTML=errors.map(e=>'• '+e).join('<br>');
+    if (errors.length) {
+      errEl.innerHTML = errors.map(e => '• ' + e).join('<br>');
       errEl.classList.add('show');
-      errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
 
-    submitting=true;
-    const btn=document.getElementById('btn-submit');
-    if(btn){btn.textContent='SUBMITTING…';btn.style.opacity='.7';}
+    submitting = true;
+    const btn = document.getElementById('btn-submit');
+    if (btn) {
+      btn.textContent = 'SUBMITTING…';
+      btn.style.opacity = '.7';
+    }
 
-    setTimeout(()=>{
-      reviews.unshift({
-        name,type,review:text,rating,
-        date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-        votes:0
+    // Add review locally
+    const newReview = {
+      name,
+      type,
+      review: text,
+      rating,
+      date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+      votes: 0
+    };
+    reviews.unshift(newReview);
+    save();
+    renderRevs();
+    addPts(10, 'Review submitted');
+
+    // Submit to Formspree
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('type', type);
+      formData.append('review', text);
+      formData.append('rating', rating);
+
+      const response = await fetch('https://formspree.io/f/xlgplvde', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
       });
-      save();
-      renderRevs();
-      // --- FORMSPREE EMAIL ---
 
+      if (response.ok) {
+        sucEl.classList.add('show');
+        setTimeout(() => sucEl.classList.remove('show'), 4500);
 
-// Reset form
-      reviewForm.reset();
-      rval=0;
-      stars.forEach(s=>s.classList.remove('on'));
-      const ri=document.getElementById('rev-rating');
-      if(ri) ri.value='';
-      const cc=document.getElementById('char-ct');
-      if(cc) cc.textContent='0';
-      sucEl.classList.add('show');
-      setTimeout(()=>sucEl.classList.remove('show'),4500);
-      addPts(10,'Review submitted');
-      submitting=false;
-      if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
-    },600);
-
+        // Reset form
+        reviewForm.reset();
+        rval = 0;
+        stars.forEach(s => s.classList.remove('on'));
+        const cc = document.getElementById('char-ct');
+        if (cc) cc.textContent = '0';
+      } else {
+        throw new Error('Formspree error: ' + response.statusText);
+      }
+    } catch (err) {
+      console.error(err);
+      errEl.textContent = 'Error submitting review. Please try again.';
+      errEl.classList.add('show');
+    } finally {
+      submitting = false;
+      if (btn) {
+        btn.textContent = 'SUBMIT REVIEW →';
+        btn.style.opacity = '1';
+      }
+    }
+  });
+}
     // Push review to Firebase
 const newReview = {
   name,
