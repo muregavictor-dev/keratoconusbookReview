@@ -387,11 +387,40 @@ function resetReviewForm(){
   if(cc) cc.textContent='0';
 }
 
+// ─── HELPER: send to Formspree (mirrors native HTML POST) ───
+// Sends as application/x-www-form-urlencoded so it is identical to a
+// plain HTML <form method="POST" action="https://formspree.io/f/xlgplvde"> submission.
+// The Accept: application/json header tells Formspree to return JSON instead
+// of redirecting, which is what lets us stay on the page when JS is running.
+function sendToFormspree(name, type, text, rating){
+  const body = new URLSearchParams();
+  body.append('name',   name);
+  body.append('type',   type);
+  body.append('review', text);
+  body.append('rating', String(rating));
+
+  return fetch('https://formspree.io/f/xlgplvde', {
+    method:  'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept':        'application/json'   // keeps page alive; ignored by browser-native POST
+    },
+    body: body.toString()
+  });
+}
+
 // ─── REVIEW FORM SUBMIT ───
+// The <form> in HTML must have:
+//   action="https://formspree.io/f/xlgplvde"
+//   method="POST"
+// This means:
+//   • NO JS  → browser does a normal full-page POST to Formspree (works natively).
+//   • JS on  → we call e.preventDefault(), validate, push to Firebase,
+//              then call sendToFormspree() via fetch so the page never navigates.
 const reviewForm=document.getElementById('review-form');
 if(reviewForm){
   reviewForm.addEventListener('submit',function(e){
-    e.preventDefault();
+    e.preventDefault();         // JS is running — take over; native POST is blocked
     if(submitting) return;
 
     const errEl=document.getElementById('form-error');
@@ -399,19 +428,20 @@ if(reviewForm){
     errEl.classList.remove('show');
     sucEl.classList.remove('show');
 
-    const name=(document.getElementById('inp-name').value||'').trim();
-    const type=(document.getElementById('inp-type').value||'').trim();
-    const text=revTxt?(revTxt.value||'').trim():'';
+    const name  =(document.getElementById('inp-name').value||'').trim();
+    const type  =(document.getElementById('inp-type').value||'').trim();
+    const text  =revTxt?(revTxt.value||'').trim():'';
     const rating=parseInt(document.getElementById('rev-rating').value||'0',10);
 
+    // ── Client-side validation (only runs when JS is available) ──
     const errors=[];
-    if(!name) errors.push('Your name is required.');
-    if(!type) errors.push('Please select a format (Hard Copy / eBook).');
+    if(!name)               errors.push('Your name is required.');
+    if(!type)               errors.push('Please select a format (Hard Copy / eBook).');
     if(!text||text.length<10) errors.push('Please write at least 10 characters in your review.');
-    if(!rating||rating<1) errors.push('Please select a star rating (1–5).');
+    if(!rating||rating<1)   errors.push('Please select a star rating (1–5).');
 
     if(errors.length){
-      errEl.innerHTML=errors.map(e=>'• '+e).join('<br>');
+      errEl.innerHTML=errors.map(err=>'• '+err).join('<br>');
       errEl.classList.add('show');
       errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
       return;
@@ -430,31 +460,21 @@ if(reviewForm){
       date: new Date().toISOString()
     };
 
-    // ── Push to Firebase (single source of truth) ──
+    // ── Step 1: Push to Firebase ──
     db.ref('reviews').push(newReview)
       .then(() => {
-        // Send email notification via Formspree
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('type', type);
-        formData.append('review', text);
-        formData.append('rating', rating);
 
-        fetch('https://formspree.io/f/xlgplvde', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        })
-        .then(res => {
-          if(res.ok){
-            console.log('Formspree email sent successfully!');
-          } else {
-            console.warn('Formspree error:', res.statusText);
-          }
-        })
-        .catch(err => console.error('Formspree network error:', err));
+        // ── Step 2: Mirror the POST to Formspree (fire-and-forget; non-blocking) ──
+        // We do NOT await this — email notification is best-effort.
+        // If Formspree fails it doesn't affect the user experience.
+        sendToFormspree(name, type, text, rating)
+          .then(res => {
+            if(res.ok) console.log('Formspree email sent successfully!');
+            else        console.warn('Formspree responded with:', res.status, res.statusText);
+          })
+          .catch(err => console.error('Formspree network error:', err));
 
-        // Add to local reviews array for immediate UI update
+        // ── Step 3: Update local state and UI ──
         reviews.unshift({
           ...newReview,
           date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
@@ -472,7 +492,7 @@ if(reviewForm){
       })
       .catch(err=>{
         console.error('Firebase submit error:', err);
-        errEl.textContent = 'Error submitting review. Please try again.';
+        errEl.textContent='Error submitting review. Please try again.';
         errEl.classList.add('show');
         submitting=false;
         if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
