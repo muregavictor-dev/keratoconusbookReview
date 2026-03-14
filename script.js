@@ -467,7 +467,7 @@ if (reviewForm) {
       }
     }
   });
-}
+
     // Push review to Firebase
 const newReview = {
   name,
