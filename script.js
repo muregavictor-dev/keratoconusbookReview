@@ -449,7 +449,7 @@ if(reviewForm){
 
     submitting=true;
     const btn=document.getElementById('btn-submit');
-    if(btn){btn.textContent='SUBMITTING…';btn.style.opacity='.7';}
+    if(btn){btn.innerHTML='SUBMITTING\u2026';btn.style.opacity='.7';}
 
     // Build the review object once
     const newReview = {
@@ -488,17 +488,31 @@ if(reviewForm){
         setTimeout(()=>sucEl.classList.remove('show'),4500);
         addPts(10,'Review submitted');
         submitting=false;
-        if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
+        if(btn){btn.innerHTML='SUBMIT REVIEW &nbsp;\u2192';btn.style.opacity='1';}
       })
       .catch(err=>{
         console.error('Firebase submit error:', err);
         errEl.textContent='Error submitting review. Please try again.';
         errEl.classList.add('show');
         submitting=false;
-        if(btn){btn.textContent='SUBMIT REVIEW →';btn.style.opacity='1';}
+        if(btn){btn.innerHTML='SUBMIT REVIEW &nbsp;\u2192';btn.style.opacity='1';}
       });
   });
 }
+
+// ─── APPRECIATE BUTTON ───
+// Standalone engagement button inside the form.
+// type="button" ensures it never triggers form submission.
+// Uses class "btn-appreciate" (not "rcard-vote") so the vote handler ignores it.
+(function(){
+  const apBtn=document.getElementById('btn-appreciate');
+  if(!apBtn) return;
+  apBtn.addEventListener('click',function(){
+    this.classList.add('burst');
+    setTimeout(()=>this.classList.remove('burst'),600);
+    toast('Thank you — your words matter! \u2764\ufe0f','fas fa-heart');
+  });
+})();
 
 // Listen for new reviews in real-time
 // Uses a flag to skip the very first batch (already loaded via .once() below)
