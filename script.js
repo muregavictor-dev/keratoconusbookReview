@@ -369,13 +369,10 @@ function resetReviewForm(){
 }
 
 // ─── HELPER: send to Formspree (mirrors native HTML POST) ───
-// Sends as application/x-www-form-urlencoded so it is identical to a
-// plain HTML <form method="POST" action="https://formspree.io/f/xlgplvde"> submission.
-// The Accept: application/json header tells Formspree to return JSON instead
-// of redirecting, which is what lets us stay on the page when JS is running.
-function sendToFormspree(name, type, text, rating){
+function sendToFormspree(name, email, type, text, rating){
   const body = new URLSearchParams();
   body.append('name',   name);
+  body.append('email',  email);
   body.append('type',   type);
   body.append('review', text);
   body.append('rating', String(rating));
@@ -384,24 +381,28 @@ function sendToFormspree(name, type, text, rating){
     method:  'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept':        'application/json'   // keeps page alive; ignored by browser-native POST
+      'Accept':        'application/json'
     },
     body: body.toString()
   });
 }
 
+// ─── MASK EMAIL HELPER ───
+function maskEmail(email){
+  if(!email) return '';
+  const parts = email.split('@');
+  if(parts.length !== 2) return '';
+  const user   = parts[0];
+  const domain = parts[1];
+  const visible = user.length <= 2 ? user[0] : user.slice(0, 2);
+  return visible + '***@' + domain;
+}
+
 // ─── REVIEW FORM SUBMIT ───
-// The <form> in HTML must have:
-//   action="https://formspree.io/f/xlgplvde"
-//   method="POST"
-// This means:
-//   • NO JS  → browser does a normal full-page POST to Formspree (works natively).
-//   • JS on  → we call e.preventDefault(), validate, push to Firebase,
-//              then call sendToFormspree() via fetch so the page never navigates.
 const reviewForm=document.getElementById('review-form');
 if(reviewForm){
   reviewForm.addEventListener('submit',function(e){
-    e.preventDefault();         // JS is running — take over; native POST is blocked
+    e.preventDefault();
     if(submitting) return;
 
     const errEl=document.getElementById('form-error');
@@ -410,16 +411,18 @@ if(reviewForm){
     sucEl.classList.remove('show');
 
     const name  =(document.getElementById('inp-name').value||'').trim();
+    const email =(document.getElementById('inp-email')?.value||'').trim();
     const type  =(document.getElementById('inp-type').value||'').trim();
     const text  =revTxt?(revTxt.value||'').trim():'';
     const rating=parseInt(document.getElementById('rev-rating').value||'0',10);
 
-    // ── Client-side validation (only runs when JS is available) ──
+    // ── Client-side validation ──
     const errors=[];
     if(!name)               errors.push('Your name is required.');
     if(!type)               errors.push('Please select a format (Hard Copy / eBook).');
     if(!text||text.length<10) errors.push('Please write at least 10 characters in your review.');
     if(!rating||rating<1)   errors.push('Please select a star rating (1–5).');
+    if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email address.');
 
     if(errors.length){
       errEl.innerHTML=errors.map(err=>'• '+err).join('<br>');
@@ -433,22 +436,23 @@ if(reviewForm){
     if(btn){btn.innerHTML='SUBMITTING\u2026';btn.style.opacity='.7';}
 
     // Build the review object once
+    const isoNow = new Date().toISOString();
     const newReview = {
       name,
+      email,
       type,
       review: text,
       rating,
-      date: new Date().toISOString()
+      date:    isoNow,
+      dateRaw: isoNow
     };
 
     // ── Step 1: Push to Firebase ──
     db.ref('reviews').push(newReview)
       .then(() => {
 
-        // ── Step 2: Mirror the POST to Formspree (fire-and-forget; non-blocking) ──
-        // We do NOT await this — email notification is best-effort.
-        // If Formspree fails it doesn't affect the user experience.
-        sendToFormspree(name, type, text, rating)
+        // ── Step 2: Mirror to Formspree (fire-and-forget) ──
+        sendToFormspree(name, email, type, text, rating)
           .then(res => {
             if(res.ok) console.log('Formspree email sent successfully!');
             else        console.warn('Formspree responded with:', res.status, res.statusText);
@@ -456,13 +460,10 @@ if(reviewForm){
           .catch(err => console.error('Formspree network error:', err));
 
         // ── Step 3: Update local state and UI ──
-        // Wrapped in try/catch so any internal rendering error cannot
-        // accidentally fall through to the Firebase .catch() block and
-        // show the user a false "Error submitting" message.
         try {
           reviews.unshift({
             ...newReview,
-            date: new Date(newReview.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+            date: new Date(isoNow).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
             votes: 0
           });
           save();
@@ -471,11 +472,9 @@ if(reviewForm){
           addPts(10,'Review submitted');
           confetti();
         } catch(innerErr) {
-          // The review was already saved to Firebase — log for debugging only.
           console.error('UI update error after successful Firebase save:', innerErr);
         }
 
-        // Always show success and restore the button — Firebase push succeeded.
         sucEl.classList.add('show');
         setTimeout(()=>sucEl.classList.remove('show'),4500);
         submitting=false;
@@ -492,9 +491,6 @@ if(reviewForm){
 }
 
 // ─── APPRECIATE BUTTON ───
-// Standalone engagement button inside the form.
-// type="button" ensures it never triggers form submission.
-// Uses class "btn-appreciate" (not "rcard-vote") so the vote handler ignores it.
 (function(){
   const apBtn=document.getElementById('btn-appreciate');
   if(!apBtn) return;
@@ -506,12 +502,10 @@ if(reviewForm){
 })();
 
 // Listen for new reviews in real-time
-// Uses a flag to skip the very first batch (already loaded via .once() below)
 let initialLoadDone = false;
 db.ref('reviews').on('child_added', snapshot => {
-  if(!initialLoadDone) return; // ignore — handled by .once() on init
+  if(!initialLoadDone) return;
   const r = snapshot.val();
-  // Avoid duplicates: skip if same name + ISO date already present
   if(!reviews.some(review => review.date === new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) && review.name === r.name)){
     reviews.unshift({
       ...r,
@@ -535,10 +529,12 @@ function renderRevs(){
     const starsHTML=Array.from({length:5},(_,j)=>`<i class="fas fa-star${j<(r.rating||0)?'':' dim'}"></i>`).join('');
     const fmt=r.type==='hard-copy'?'📖 Hard Copy':'💻 eBook';
     const voted=votes[i];
+    const maskedEmail = r.email ? `<div class="rcard-email">${maskEmail(r.email)}</div>` : '';
     return `<div class="rcard">
       <div class="rcard-bq">"</div>
       <div class="rcard-top">
         <div class="rcard-name">${esc(r.name)}</div>
+        ${maskedEmail}
         <div class="rcard-meta">
           <span class="rcard-date">${r.date||''}</span>
           <span class="rcard-type">${fmt}</span>
@@ -560,17 +556,14 @@ function renderRevs(){
 function voteH(i, btn){
   if(votes[i]) return;
 
-  // Update local review object
   reviews[i].votes = (reviews[i].votes||0)+1;
   votes[i] = true;
 
-  // Update Firebase
   const reviewId = `review_${i}`;
   db.ref('reviews/' + reviewId).update({ votes: reviews[i].votes })
     .then(() => console.log('Firebase vote updated'))
     .catch(err => console.error('Firebase vote error:', err));
 
-  // Update UI
   btn.classList.add('voted');
   btn.disabled = true;
   btn.innerHTML = `<i class="fas fa-thumbs-up"></i> ${reviews[i].votes}`;
@@ -743,17 +736,22 @@ db.ref('reviews').once('value')
     // Reset local reviews array
     reviews = [];
 
-    // Convert Firebase object to array, preserving votes
+    // Convert Firebase object to array, preserving votes and email
     Object.values(data).forEach(r => {
       reviews.push({
-        name: r.name,
-        type: r.type,
-        review: r.review,
-        rating: r.rating,
-        date: new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
-        votes: r.votes||0
+        name:    r.name,
+        email:   r.email || '',
+        type:    r.type,
+        review:  r.review,
+        rating:  r.rating,
+        dateRaw: r.dateRaw || r.date,
+        date:    new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+        votes:   r.votes||0
       });
     });
+
+    // Sort newest first
+    reviews.sort((a, b) => new Date(b.dateRaw) - new Date(a.dateRaw));
 
     // Render reviews
     renderRevs();
@@ -780,8 +778,6 @@ const _xFg=document.getElementById('xp-fg');
 if(_xFg) observer.observe(_xFg);
 
 // ─── FIREBASE VOTE SYNC (registered here — after `reviews` array is declared) ───
-// Listens for any vote updates on existing reviews and patches the UI in real-time.
-// Kept at the bottom so `reviews` is always defined before this listener fires.
 db.ref('reviews').on('value', snapshot => {
   const data = snapshot.val();
   if(!data) return;
