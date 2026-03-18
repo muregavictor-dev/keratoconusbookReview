@@ -594,6 +594,1098 @@
   </div><!-- /.ch-grid -->
 </section>
 
+<!-- ═══════════════════════════════════════════════════════════
+     COMMUNITY SECTION — "YOUR STORY MATTERS"
+     Paste this block inside index.html, just before <!-- FOOTER -->
+     ═══════════════════════════════════════════════════════════ -->
+
+<style>
+/* ────────────────────────────────────────────────────────────
+   COMMUNITY SECTION — uses site CSS variables:
+   --red, --red2, --orange, --orange2, --black, --black2,
+   --black3, --white, --border, --glow
+   Fonts: Bebas Neue / Fraunces / DM Sans (already loaded)
+──────────────────────────────────────────────────────────── */
+
+.community-section {
+  background: var(--black2);
+  padding: 70px 20px 80px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,.04);
+}
+/* Watermark — matches site .ch-section::after */
+.community-section::before {
+  content: 'COMMUNITY';
+  position: absolute;
+  left: -10px; bottom: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12rem;
+  color: rgba(255,255,255,.018);
+  letter-spacing: .04em;
+  pointer-events: none;
+  white-space: nowrap;
+  line-height: 1;
+}
+/* Ambient glow blob — matches hero */
+.community-section::after {
+  content: '';
+  position: absolute;
+  top: 10%; left: 55%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,26,0,.08) 0%, transparent 70%);
+  animation: breathe 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cm-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Section head — mirrors .sec-head ── */
+.cm-sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cm-sec-eyebrow {
+  font-size: .63rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cm-sec-eyebrow::before {
+  content: '';
+  width: 22px; height: 1px;
+  background: var(--orange);
+}
+.cm-sec-h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  letter-spacing: .03em;
+  line-height: 1;
+}
+.cm-sec-h2 span { color: var(--orange); }
+.cm-sec-sub {
+  font-family: 'Fraunces', serif;
+  font-size: .95rem;
+  font-style: italic;
+  color: rgba(255,255,255,.4);
+  margin-top: 12px;
+  font-weight: 300;
+  max-width: 440px;
+  line-height: 1.65;
+}
+
+/* ── Stats strip — exact clone of .stats-bar ── */
+.cm-stats-strip {
+  background: var(--red);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+.cm-stats-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,.06) 40px, rgba(0,0,0,.06) 41px);
+}
+.cm-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+.cm-stat-sep { width: 1px; height: 32px; background: rgba(255,255,255,.2); }
+.cm-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  color: var(--white);
+  line-height: 1;
+}
+.cm-stat-lbl {
+  font-size: .58rem;
+  color: rgba(255,255,255,.7);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+/* ── Intro cards — same structure as chapter cards ── */
+.cm-intros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-bottom: 48px;
+}
+.cm-intro-card {
+  background: var(--black2);
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  border-left: 3px solid transparent;
+  transition: background .35s, border-left-color .3s, transform .25s, box-shadow .3s;
+}
+.cm-intro-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,106,0,.07) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .35s;
+  pointer-events: none;
+}
+.cm-intro-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--red), var(--orange));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+}
+.cm-intro-card:hover {
+  background: var(--black3);
+  border-left-color: var(--orange);
+  box-shadow: -4px 0 30px rgba(255,106,0,.08), 0 20px 60px rgba(0,0,0,.4);
+  transform: translateY(-2px);
+}
+.cm-intro-card:hover::before { opacity: 1; }
+.cm-intro-card:hover::after  { transform: scaleX(1); }
+.cm-ic-icon { font-size: 1.6rem; margin-bottom: 14px; display: block; }
+.cm-ic-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: .06em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.cm-ic-text {
+  font-family: 'Fraunces', serif;
+  font-size: .83rem;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255,255,255,.46);
+  line-height: 1.75;
+}
+
+/* ── Feed ── */
+.cm-feed-wrap { margin-bottom: 48px; }
+.cm-feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.cm-feed-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: .05em;
+}
+.cm-feed-title span { color: var(--red); }
+
+/* Filter pills — match nav / .btn-g style */
+.cm-filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.cm-filter-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.35);
+  padding: 6px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-filter-btn:hover,
+.cm-filter-btn.active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--black);
+}
+
+/* Feed scroll — matches .rev-feed */
+.cm-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.cm-feed::-webkit-scrollbar { width: 3px; }
+.cm-feed::-webkit-scrollbar-thumb { background: var(--orange); }
+
+/* Story card — matches .rcard exactly */
+.cm-story-card {
+  background: var(--black3);
+  border-left: 3px solid var(--red);
+  padding: 18px 18px 14px;
+  position: relative;
+  transition: border-left-color .2s, transform .2s;
+  animation: rslide .3s ease;
+}
+.cm-story-card:hover {
+  border-left-color: var(--orange);
+  transform: translateX(3px);
+}
+.cm-story-card.confidential-badge-card {
+  border-left-color: rgba(255,106,0,.25);
+  opacity: .7;
+}
+
+/* Big quote mark — matches .rcard-bq */
+.cm-sc-bq {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  color: rgba(255,106,0,.07);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Card top row */
+.cm-sc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.cm-sc-author { display: flex; align-items: center; gap: 10px; }
+
+/* Avatar — skewed clip-path like .pts-pill */
+.cm-sc-avatar {
+  width: 34px; height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .8rem;
+  color: var(--black);
+  flex-shrink: 0;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.cm-sc-name {
+  font-weight: 600;
+  font-size: .88rem;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+}
+.cm-sc-meta {
+  font-size: .6rem;
+  color: rgba(255,255,255,.22);
+  margin-top: 2px;
+  letter-spacing: .04em;
+}
+.cm-sc-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+/* Badges — matches .rcard-type */
+.cm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .56rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.cm-badge-story    { border: 1px solid rgba(255,106,0,.35); color: var(--orange); }
+.cm-badge-struggle { border: 1px solid rgba(224,26,0,.4);   color: var(--red2); }
+.cm-badge-enc      { border: 1px solid rgba(255,149,0,.35); color: var(--orange2); }
+.cm-badge-conf     { border: 1px solid rgba(255,255,255,.1);color: rgba(255,255,255,.3); }
+
+/* Card title — Bebas */
+.cm-sc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: .04em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+/* Story body — matches .rcard-txt */
+.cm-sc-body {
+  font-family: 'Fraunces', serif;
+  font-size: .83rem;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255,255,255,.55);
+  line-height: 1.75;
+  margin-bottom: 12px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255,106,0,.2);
+}
+.cm-sc-body.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cm-sc-read-more {
+  background: none; border: none;
+  color: var(--orange);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer; padding: 0;
+  margin-bottom: 12px;
+  display: block;
+  transition: color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-sc-read-more:hover { color: var(--orange2); }
+
+/* Card footer — matches .rcard-foot */
+.cm-sc-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.cm-react-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,.1);
+  color: rgba(255,255,255,.3);
+  padding: 5px 12px;
+  font-size: .63rem;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-react-btn:hover              { border-color: var(--orange); color: var(--orange); }
+.cm-react-btn.reacted            { border-color: var(--orange); color: var(--orange); }
+.cm-react-btn.cm-hug-btn:hover   { border-color: var(--red);    color: var(--red); }
+.cm-react-btn.cm-hug-btn.reacted { border-color: var(--red);    color: var(--red); }
+.cm-sc-date {
+  margin-left: auto;
+  font-size: .6rem;
+  color: rgba(255,255,255,.2);
+  letter-spacing: .04em;
+}
+
+/* Confidential overlay */
+.cm-conf-overlay {
+  position: absolute; inset: 0;
+  background: rgba(10,10,10,.8);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; z-index: 2;
+}
+.cm-conf-overlay i { font-size: 1.3rem; color: rgba(255,106,0,.35); }
+.cm-conf-overlay p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .7rem;
+  color: rgba(255,255,255,.22);
+  text-align: center; max-width: 180px; line-height: 1.5;
+}
+
+/* Empty state */
+.cm-empty {
+  text-align: center;
+  padding: 50px 20px;
+  border: 1px dashed rgba(255,255,255,.07);
+  color: rgba(255,255,255,.18);
+}
+.cm-empty i { font-size: 2.2rem; display: block; margin-bottom: 10px; color: rgba(255,106,0,.15); }
+.cm-empty p { font-family: 'Fraunces', serif; font-style: italic; font-size: .86rem; }
+
+/* ── Form — mirrors .rev-form-box ── */
+.cm-form-section {
+  background: var(--black3);
+  border: 1px solid rgba(255,255,255,.06);
+  border-top: 3px solid var(--orange);
+  padding: 28px 24px;
+  position: relative;
+}
+.cm-form-section::before {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, transparent 50%, rgba(255,106,0,.06) 50%);
+}
+.cm-form-section::after {
+  content: 'SHARE';
+  position: absolute;
+  right: -10px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 7rem;
+  color: rgba(255,255,255,.018);
+  letter-spacing: .05em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.cm-form-ttl {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: .05em;
+  margin-bottom: 20px;
+}
+.cm-form-ttl span { color: var(--orange); }
+
+.cm-form-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+.cm-form-lead-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: .04em;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.cm-form-lead-title span { color: var(--orange); }
+.cm-form-lead-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: .88rem;
+  color: rgba(255,255,255,.4);
+  line-height: 1.65;
+}
+
+/* Prompt buttons — match .ch-excerpt border style */
+.cm-form-prompts { display: flex; flex-direction: column; gap: 8px; }
+.cm-prompt {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.07);
+  border-bottom: 2px solid rgba(255,255,255,.08);
+  padding: 10px 13px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: .8rem;
+  color: rgba(255,255,255,.38);
+  line-height: 1.5;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s, background .2s, color .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-prompt:hover {
+  background: rgba(255,106,0,.04);
+  border-bottom-color: var(--orange);
+  color: rgba(255,255,255,.6);
+}
+
+/* Error / success — matches .form-error / .form-success */
+.cm-form-error {
+  background: rgba(224,26,0,.12);
+  border: 1px solid rgba(224,26,0,.3);
+  color: #ff6b6b;
+  padding: 10px 14px;
+  font-size: .78rem;
+  margin-bottom: 12px;
+  display: none;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.55;
+}
+.cm-form-error.show { display: block; }
+.cm-form-success {
+  background: rgba(37,211,102,.1);
+  border: 1px solid rgba(37,211,102,.25);
+  color: #25D366;
+  padding: 12px 16px;
+  font-size: .82rem;
+  margin-bottom: 12px;
+  display: none;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
+.cm-form-success.show { display: block; }
+
+/* Form rows — matches .frow / .frow-2 / .flbl */
+.cm-frow   { margin-bottom: 14px; }
+.cm-frow-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.cm-flbl {
+  display: block;
+  font-size: .6rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  margin-bottom: 6px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Inputs — exact match to .finp / .ftxt / .fsel */
+.cm-finp, .cm-fsel, .cm-ftxt {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-bottom: 2px solid rgba(255,255,255,.08);
+  color: var(--white);
+  padding: 11px 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .87rem;
+  outline: none;
+  transition: border-color .2s, background .2s;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+}
+.cm-finp::placeholder, .cm-ftxt::placeholder { color: rgba(255,255,255,.18); }
+.cm-finp:focus, .cm-fsel:focus, .cm-ftxt:focus {
+  border-bottom-color: var(--orange);
+  background: rgba(255,106,0,.04);
+}
+.cm-fsel { cursor: pointer; }
+.cm-fsel option { background: var(--black2); }
+.cm-ftxt { resize: vertical; min-height: 120px; }
+.cm-char-ct {
+  text-align: right;
+  font-size: .62rem;
+  color: rgba(255,255,255,.18);
+  margin-top: 3px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Type picker pills — matches .btn-g + active state */
+.cm-type-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.cm-type-opt { position: relative; }
+.cm-type-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.cm-type-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.35);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .18s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-type-label:hover { border-color: var(--orange); color: rgba(255,255,255,.7); }
+.cm-type-opt input:checked + .cm-type-label {
+  background: rgba(255,106,0,.1);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* Visibility picker — matches .buy-card style */
+.cm-visibility-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.cm-vis-opt { position: relative; }
+.cm-vis-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.cm-vis-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 16px 10px;
+  background: var(--black);
+  border: 1px solid rgba(255,255,255,.07);
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+}
+.cm-vis-label:hover { border-color: rgba(255,106,0,.3); }
+.cm-vis-opt input:checked + .cm-vis-label {
+  border-color: var(--orange);
+  border-width: 2px;
+  background: rgba(255,106,0,.04);
+}
+/* Bottom accent — matches .buy-card.featured */
+.cm-vis-opt input:checked + .cm-vis-label::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--red), var(--orange));
+}
+.cm-vis-icon { font-size: 1.2rem; line-height: 1; }
+.cm-vis-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .85rem;
+  letter-spacing: .1em;
+  color: var(--white);
+}
+.cm-vis-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .65rem;
+  color: rgba(255,255,255,.28);
+  line-height: 1.4;
+}
+.cm-vis-opt input:checked + .cm-vis-label .cm-vis-name { color: var(--orange); }
+
+/* Safe space notice — matches .buy-payment-info */
+.cm-safe-notice {
+  background: rgba(255,106,0,.04);
+  border: 1px solid rgba(255,106,0,.14);
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.cm-safe-notice i { color: var(--orange); font-size: .92rem; flex-shrink: 0; margin-top: 2px; }
+.cm-safe-notice p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .78rem;
+  color: rgba(255,255,255,.45);
+  line-height: 1.65;
+  margin: 0;
+}
+.cm-safe-notice strong { color: rgba(255,255,255,.7); }
+
+/* Submit button — exact match to .btn-submit */
+.cm-btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  color: var(--white);
+  border: none;
+  padding: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: .12em;
+  cursor: pointer;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  margin-top: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+.cm-btn-submit:hover, .cm-btn-submit:active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(224,26,0,.4);
+}
+
+/* ── RESPONSIVE — mirrors site breakpoints ── */
+@media(max-width: 960px) {
+  .cm-intros    { grid-template-columns: 1fr 1fr; gap: 3px; }
+  .cm-form-top  { grid-template-columns: 1fr; gap: 20px; }
+}
+@media(max-width: 640px) {
+  .community-section        { padding: 44px 14px 60px; }
+  .community-section::before { font-size: 6rem; }
+  .cm-intros                { grid-template-columns: 1fr; }
+  .cm-feed                  { max-height: 480px; }
+  .cm-frow-2                { grid-template-columns: 1fr; }
+  .cm-visibility-row        { grid-template-columns: 1fr; }
+  .cm-stats-strip           { gap: 8px; padding: 10px 14px; }
+  .cm-stat-sep              { display: none; }
+  .cm-stat-num              { font-size: 1.5rem; }
+  .cm-stat-lbl              { font-size: .52rem; }
+  .cm-form-section          { padding: 20px 16px; }
+  .cm-filter-btn span       { display: none; }
+}
+@media(max-width: 400px) {
+  .cm-visibility-row { grid-template-columns: 1fr; }
+  .cm-type-label     { font-size: .62rem; padding: 7px 12px; }
+}
+</style>
+
+<!-- ════════════════════════════════════════
+     COMMUNITY SECTION HTML
+════════════════════════════════════════ -->
+<section id="community-section" class="community-section">
+  <div class="cm-inner">
+
+    <!-- Section head -->
+    <div class="cm-sec-head">
+      <div>
+        <div class="cm-sec-eyebrow">You Are Not Alone</div>
+        <h2 class="cm-sec-h2">YOUR STORY <span>MATTERS</span></h2>
+        <p class="cm-sec-sub">A safe space — no judgment, no pressure. Share what you've carried, what you've overcome, or simply let others know they are not walking this road alone.</p>
+      </div>
+    </div>
+
+    <!-- Stats strip (red bar — same as hero stats bar) -->
+    <div class="cm-stats-strip">
+      <div class="cm-stat">
+        <div class="cm-stat-num" id="cm-stat-stories">0</div>
+        <div class="cm-stat-lbl">Stories<br>Shared</div>
+      </div>
+      <div class="cm-stat-sep"></div>
+      <div class="cm-stat">
+        <div class="cm-stat-num" id="cm-stat-struggles">0</div>
+        <div class="cm-stat-lbl">Struggles<br>Opened</div>
+      </div>
+      <div class="cm-stat-sep"></div>
+      <div class="cm-stat">
+        <div class="cm-stat-num" id="cm-stat-enc">0</div>
+        <div class="cm-stat-lbl">Words of<br>Encouragement</div>
+      </div>
+      <div class="cm-stat-sep"></div>
+      <div class="cm-stat">
+        <div class="cm-stat-num" id="cm-stat-hugs">0</div>
+        <div class="cm-stat-lbl">Hugs<br>Given</div>
+      </div>
+    </div>
+
+    <!-- Intro cards (chapter-card style) -->
+    <div class="cm-intros">
+      <div class="cm-intro-card">
+        <span class="cm-ic-icon">🪔</span>
+        <div class="cm-ic-title">Share Your Story</div>
+        <p class="cm-ic-text">Your journey — from diagnosis to today — could be the light someone else desperately needs. Real stories heal in ways medicine cannot.</p>
+      </div>
+      <div class="cm-intro-card">
+        <span class="cm-ic-icon">🤝</span>
+        <div class="cm-ic-title">Open Your Struggles</div>
+        <p class="cm-ic-text">Naming the hard parts out loud breaks their power. Whether it's fear, grief, or exhaustion — you are allowed to say it here. Others feel it too.</p>
+      </div>
+      <div class="cm-intro-card">
+        <span class="cm-ic-icon">💬</span>
+        <div class="cm-ic-title">Encourage Someone</div>
+        <p class="cm-ic-text">Sometimes the most powerful thing is three words: "I see you." A single message of hope can keep someone going through the darkest night.</p>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="cm-feed-wrap">
+      <div class="cm-feed-header">
+        <div class="cm-feed-title">COMMUNITY <span>VOICES</span></div>
+        <div class="cm-filter-row">
+          <button class="cm-filter-btn active" onclick="cmFilter('all',this)">All</button>
+          <button class="cm-filter-btn"        onclick="cmFilter('story',this)">Stories</button>
+          <button class="cm-filter-btn"        onclick="cmFilter('struggle',this)">Struggles</button>
+          <button class="cm-filter-btn"        onclick="cmFilter('encouragement',this)">Encouragement</button>
+        </div>
+      </div>
+      <div class="cm-feed" id="cm-feed"></div>
+    </div>
+
+    <!-- Submission form -->
+    <div class="cm-form-section">
+      <div class="cm-form-ttl">SHARE YOUR <span>VOICE</span></div>
+
+      <div class="cm-form-top">
+        <div>
+          <div class="cm-form-lead-title">READY TO<br><span>SHARE?</span></div>
+          <p class="cm-form-lead-sub">Whether it's one sentence or one thousand — your voice deserves to be heard. Fill in as much or as little as you're comfortable with.</p>
+        </div>
+        <div>
+          <label class="cm-flbl" style="margin-bottom:8px;">Need a prompt to get started?</label>
+          <div class="cm-form-prompts">
+            <button type="button" class="cm-prompt" onclick="cmUsePrompt(this)">The moment I knew something was wrong with my eyes was…</button>
+            <button type="button" class="cm-prompt" onclick="cmUsePrompt(this)">What nobody tells you about living with KC is…</button>
+            <button type="button" class="cm-prompt" onclick="cmUsePrompt(this)">The one thing that kept me going was…</button>
+            <button type="button" class="cm-prompt" onclick="cmUsePrompt(this)">To anyone just diagnosed, I want you to know…</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-form-error"   id="cm-form-error"></div>
+      <div class="cm-form-success" id="cm-form-success">🌟 Thank you for sharing. Your voice is now part of this community.</div>
+
+      <form id="cm-story-form" novalidate>
+
+        <div class="cm-frow-2">
+          <div>
+            <label class="cm-flbl" for="cm-inp-name">Your Name / Initials *</label>
+            <input class="cm-finp" type="text" id="cm-inp-name" placeholder="e.g. Jane W. or Anonymous" autocomplete="off">
+          </div>
+          <div>
+            <label class="cm-flbl" for="cm-inp-age">Age / Stage (optional)</label>
+            <input class="cm-finp" type="text" id="cm-inp-age" placeholder="e.g. 24, post-transplant" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="cm-frow">
+          <label class="cm-flbl">What type of post is this? *</label>
+          <div class="cm-type-row">
+            <label class="cm-type-opt">
+              <input type="radio" name="cm-type" value="story">
+              <span class="cm-type-label"><i class="fas fa-book-open"></i> My Story</span>
+            </label>
+            <label class="cm-type-opt">
+              <input type="radio" name="cm-type" value="struggle">
+              <span class="cm-type-label"><i class="fas fa-heart-crack"></i> My Struggle</span>
+            </label>
+            <label class="cm-type-opt">
+              <input type="radio" name="cm-type" value="encouragement">
+              <span class="cm-type-label"><i class="fas fa-hand-holding-heart"></i> Encouragement</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="cm-frow">
+          <label class="cm-flbl" for="cm-inp-title">Give your post a title *</label>
+          <input class="cm-finp" type="text" id="cm-inp-title" placeholder='e.g. "The day my world blurred forever"' maxlength="100">
+        </div>
+
+        <div class="cm-frow">
+          <label class="cm-flbl" for="cm-inp-body">Your story / message *</label>
+          <textarea class="cm-ftxt" id="cm-inp-body" rows="6" maxlength="1500" placeholder="Start typing here… or click one of the prompts above to get going."></textarea>
+          <div class="cm-char-ct"><span id="cm-char-ct">0</span> / 1500</div>
+        </div>
+
+        <!-- Visibility picker -->
+        <div class="cm-frow">
+          <label class="cm-flbl">Who can see this post? *</label>
+          <div class="cm-visibility-row">
+            <label class="cm-vis-opt">
+              <input type="radio" name="cm-visibility" value="public" checked>
+              <span class="cm-vis-label">
+                <span class="cm-vis-icon">🌍</span>
+                <span class="cm-vis-name">Public</span>
+                <span class="cm-vis-desc">Shown on this page for everyone to read &amp; react to</span>
+              </span>
+            </label>
+            <label class="cm-vis-opt">
+              <input type="radio" name="cm-visibility" value="community">
+              <span class="cm-vis-label">
+                <span class="cm-vis-icon">🤝</span>
+                <span class="cm-vis-name">Community</span>
+                <span class="cm-vis-desc">Shown anonymously — name hidden, story visible</span>
+              </span>
+            </label>
+            <label class="cm-vis-opt">
+              <input type="radio" name="cm-visibility" value="confidential">
+              <span class="cm-vis-label">
+                <span class="cm-vis-icon">🔒</span>
+                <span class="cm-vis-name">Confidential</span>
+                <span class="cm-vis-desc">Only Victor sees this — kept strictly private</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Safe space notice -->
+        <div class="cm-safe-notice">
+          <i class="fas fa-shield-halved"></i>
+          <p>This is a <strong>safe, moderated space</strong>. Your submission goes to Victor before appearing publicly. If your post is confidential, <strong>only Victor will read it</strong> — it will never appear on this page.</p>
+        </div>
+
+        <button type="submit" class="cm-btn-submit" id="cm-btn-submit">
+          SHARE WITH THE COMMUNITY &nbsp;→
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════ COMMUNITY JS ════════════ -->
+<script>
+(function(){
+  const CM_COLORS=['#FF6A00','#E01A00','#FF9500','#FF2800','#ffffff','#FFD700','#c8785a'];
+  function cmAvatarColor(n){let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))&0xffffffff;return CM_COLORS[Math.abs(h)%CM_COLORS.length];}
+  function cmInitials(n){if(!n)return'?';const p=n.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():n.slice(0,2).toUpperCase();}
+  function cmEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function cmRelDate(iso){try{const d=(Date.now()-new Date(iso).getTime())/1000;if(d<60)return'Just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';if(d<604800)return Math.floor(d/86400)+'d ago';return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){return'';}}
+  function cmLoad(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
+  function cmSave(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+  let cmPosts=cmLoad('kc_cm_posts',[]);
+  let cmReacted=cmLoad('kc_cm_reacted',{});
+  let cmFilter_active='all';
+  let cmSubmitting=false;
+
+  const CM_SEEDS=[
+    {name:'Faith N.',age:'31, 2 yrs post-transplant',type:'story',title:"I almost gave up — then I found Victor's story",body:"After my third failed contact lens fitting, I went home and cried for an hour. I genuinely thought my life was over. A friend sent me a link to this page and I read every chapter in one sitting. For the first time in years, I felt seen. The surgery changed my sight. This book changed my perspective.",visibility:'public',date:new Date(Date.now()-3*86400000).toISOString(),hearts:14,hugs:8},
+    {name:'Anonymous',age:'',type:'struggle',title:"No one at school understood what was happening to my eyes",body:"I sat in the front row every day and still couldn't read the board. My teachers thought I wasn't paying attention. My parents thought I was being difficult. The loneliness of that — of having something wrong that nobody could see — was worse than the blurring itself. I'm still processing it years later.",visibility:'community',date:new Date(Date.now()-7*86400000).toISOString(),hearts:22,hugs:19},
+    {name:'David K.',age:'40',type:'encouragement',title:"To everyone on the waiting list — hold on",body:"I waited 3 years for my corneal transplant. Three years of worsening vision, cancelled appointments, COVID delays. If you're in that waiting room right now — I see you. It is brutal. But the morning after surgery, when the bandage came off and I could see my daughter's face clearly for the first time in years... every single day of waiting was worth it. Hold on.",visibility:'public',date:new Date(Date.now()-14*86400000).toISOString(),hearts:41,hugs:33}
+  ];
+
+  function cmGetDisplayPosts(){
+    const real=cmPosts.filter(p=>p.visibility!=='confidential');
+    if(real.length===0)return CM_SEEDS;
+    return [...real,...CM_SEEDS].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  }
+
+  function cmRender(){
+    const feed=document.getElementById('cm-feed');
+    if(!feed)return;
+    const all=cmGetDisplayPosts();
+    const filtered=cmFilter_active==='all'?all:all.filter(p=>p.type===cmFilter_active);
+    const sEl=id=>document.getElementById(id);
+    if(sEl('cm-stat-stories'))  sEl('cm-stat-stories').textContent =all.filter(p=>p.type==='story').length;
+    if(sEl('cm-stat-struggles')) sEl('cm-stat-struggles').textContent=all.filter(p=>p.type==='struggle').length;
+    if(sEl('cm-stat-enc'))      sEl('cm-stat-enc').textContent     =all.filter(p=>p.type==='encouragement').length;
+    if(sEl('cm-stat-hugs'))     sEl('cm-stat-hugs').textContent    =all.reduce((a,p)=>a+(p.hugs||0),0);
+    if(!filtered.length){feed.innerHTML='<div class="cm-empty"><i class="fas fa-seedling"></i><p>No posts here yet. Be the first to share in this space.</p></div>';return;}
+    feed.innerHTML=filtered.map((p,i)=>{
+      const realIdx=all.indexOf(p);
+      const isConf=p.visibility==='confidential';
+      const isCom=p.visibility==='community';
+      const dn=isCom?'Anonymous':cmEsc(p.name||'Unknown');
+      const ac=cmAvatarColor(dn);
+      const reacted=cmReacted[realIdx]||{};
+      const tb={story:'<span class="cm-badge cm-badge-story"><i class="fas fa-book-open"></i> Story</span>',struggle:'<span class="cm-badge cm-badge-struggle"><i class="fas fa-heart-crack"></i> Struggle</span>',encouragement:'<span class="cm-badge cm-badge-enc"><i class="fas fa-hand-holding-heart"></i> Encouragement</span>'}[p.type]||'';
+      const cb=isConf?'<span class="cm-badge cm-badge-conf"><i class="fas fa-lock"></i> Confidential</span>':'';
+      const long=(p.body||'').length>280;
+      return`<div class="cm-story-card${isConf?' confidential-badge-card':''}" style="animation-delay:${i*.05}s">
+        <div class="cm-sc-bq">"</div>
+        ${isConf?'<div class="cm-conf-overlay"><i class="fas fa-lock"></i><p>Shared privately with Victor only.</p></div>':''}
+        <div class="cm-sc-top">
+          <div class="cm-sc-author">
+            <div class="cm-sc-avatar" style="background:${ac};color:${ac==='#ffffff'?'#0a0a0a':'#000'}">${cmInitials(dn)}</div>
+            <div>
+              <div class="cm-sc-name">${dn}${p.age?` <span style="font-size:.65rem;color:rgba(255,255,255,.2);font-weight:400">· ${cmEsc(p.age)}</span>`:''}</div>
+              <div class="cm-sc-meta">${cmRelDate(p.date)}</div>
+            </div>
+          </div>
+          <div class="cm-sc-badges">${tb}${cb}</div>
+        </div>
+        <div class="cm-sc-title">${cmEsc(p.title||'')}</div>
+        <p class="cm-sc-body${long?' clamped':''}" id="cm-body-${realIdx}">${cmEsc(p.body||'')}</p>
+        ${long?`<button class="cm-sc-read-more" onclick="cmToggleRead(${realIdx},this)">Read more ↓</button>`:''}
+        ${isConf?'':`<div class="cm-sc-foot">
+          <button class="cm-react-btn${reacted.heart?' reacted':''}" onclick="cmReact(${realIdx},'heart',this)"><i class="fas fa-heart"></i> <span class="cm-h-ct">${p.hearts||0}</span></button>
+          <button class="cm-react-btn cm-hug-btn${reacted.hug?' reacted':''}" onclick="cmReact(${realIdx},'hug',this)"><i class="fas fa-hands-holding-child"></i> <span class="cm-g-ct">${p.hugs||0}</span></button>
+          <span class="cm-sc-date">${cmRelDate(p.date)}</span>
+        </div>`}
+      </div>`;
+    }).join('');
+  }
+
+  window.cmToggleRead=function(idx,btn){
+    const el=document.getElementById('cm-body-'+idx);if(!el)return;
+    if(btn._expanded){el.classList.add('clamped');btn.textContent='Read more ↓';btn._expanded=false;}
+    else{el.classList.remove('clamped');btn.textContent='Show less ↑';btn._expanded=true;}
+  };
+
+  window.cmReact=function(idx,type,btn){
+    const all=cmGetDisplayPosts();const post=all[idx];if(!post)return;
+    if(!cmReacted[idx])cmReacted[idx]={};if(cmReacted[idx][type])return;
+    cmReacted[idx][type]=true;
+    if(type==='heart')post.hearts=(post.hearts||0)+1;
+    if(type==='hug')  post.hugs=(post.hugs||0)+1;
+    btn.classList.add('reacted');
+    const ct=btn.querySelector(type==='heart'?'.cm-h-ct':'.cm-g-ct');
+    if(ct)ct.textContent=type==='heart'?post.hearts:post.hugs;
+    const rpi=cmPosts.indexOf(post);if(rpi>=0){cmPosts[rpi]=post;cmSave('kc_cm_posts',cmPosts);}
+    cmSave('kc_cm_reacted',cmReacted);
+    if(typeof db!=='undefined')db.ref('community/'+idx).update({hearts:post.hearts,hugs:post.hugs}).catch(()=>{});
+    const hugEl=document.getElementById('cm-stat-hugs');if(hugEl)hugEl.textContent=cmGetDisplayPosts().reduce((a,p)=>a+(p.hugs||0),0);
+    if(typeof addPts==='function')addPts(1,'Reacted to a community post');
+    if(typeof toast==='function')toast(type==='heart'?'❤️ Sending love!':'🤗 Sending a hug!','fas fa-heart');
+  };
+
+  window.cmFilter=function(f,btn){
+    cmFilter_active=f;
+    document.querySelectorAll('.cm-filter-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    cmRender();
+  };
+
+  window.cmUsePrompt=function(btn){
+    const ta=document.getElementById('cm-inp-body');if(!ta)return;
+    ta.value=btn.textContent.trim()+' ';ta.focus();
+    ta.setSelectionRange(ta.value.length,ta.value.length);
+    const cc=document.getElementById('cm-char-ct');if(cc)cc.textContent=ta.value.length;
+  };
+
+  const cmBody=document.getElementById('cm-inp-body');
+  if(cmBody)cmBody.addEventListener('input',function(){const cc=document.getElementById('cm-char-ct');if(cc)cc.textContent=this.value.length;});
+
+  const cmForm=document.getElementById('cm-story-form');
+  if(cmForm){
+    cmForm.addEventListener('submit',function(e){
+      e.preventDefault();if(cmSubmitting)return;
+      const errEl=document.getElementById('cm-form-error');
+      const sucEl=document.getElementById('cm-form-success');
+      errEl.classList.remove('show');sucEl.classList.remove('show');
+      const name=(document.getElementById('cm-inp-name')?.value||'').trim();
+      const age=(document.getElementById('cm-inp-age')?.value||'').trim();
+      const typeEl=document.querySelector('input[name="cm-type"]:checked');
+      const title=(document.getElementById('cm-inp-title')?.value||'').trim();
+      const body=(document.getElementById('cm-inp-body')?.value||'').trim();
+      const visEl=document.querySelector('input[name="cm-visibility"]:checked');
+      const type=typeEl?typeEl.value:'';
+      const visibility=visEl?visEl.value:'public';
+      const errs=[];
+      if(!name||name.length<2)errs.push('• Please enter a name or initials.');
+      if(!type)errs.push('• Please choose a post type.');
+      if(!title||title.length<5)errs.push('• Please give your post a short title.');
+      if(!body||body.length<20)errs.push('• Please write at least 20 characters.');
+      if(errs.length){errEl.innerHTML=errs.join('<br>');errEl.classList.add('show');errEl.scrollIntoView({behavior:'smooth',block:'nearest'});return;}
+      cmSubmitting=true;
+      const btn=document.getElementById('cm-btn-submit');
+      if(btn){btn.textContent='SHARING…';btn.style.opacity='.7';}
+      const post={name,age,type,title,body,visibility,date:new Date().toISOString(),hearts:0,hugs:0};
+      const pushFn=(typeof db!=='undefined')?db.ref('community').push(post):Promise.resolve();
+      pushFn.then(()=>{
+        if(typeof sendToFormspree==='function'){
+          const tl={story:'My Story',struggle:'My Struggle',encouragement:'Encouragement'};
+          const vl={public:'Public',community:'Community (anonymous)',confidential:'Confidential — Victor only'};
+          sendToFormspree(name,'',tl[type]||type,`[${vl[visibility]||visibility}]\n\nTITLE: ${title}\n\n${body}${age?'\n\nAge/Stage: '+age:''}`,0).catch(()=>{});
+        }
+        cmPosts.unshift(post);cmSave('kc_cm_posts',cmPosts);cmRender();
+        cmForm.reset();const cc=document.getElementById('cm-char-ct');if(cc)cc.textContent='0';
+        sucEl.classList.add('show');setTimeout(()=>sucEl.classList.remove('show'),5000);
+        if(typeof addPts==='function')addPts(15,'Shared your story with the community');
+        if(typeof confetti==='function'&&visibility!=='confidential')confetti();
+        if(typeof toast==='function'){const msgs={public:'🌍 Your story is now live!',community:'🤝 Shared anonymously.',confidential:'🔒 Sent privately to Victor.'};toast(msgs[visibility]||'Story shared!','fas fa-check-circle');}
+        cmSubmitting=false;
+        if(btn){btn.textContent='SHARE WITH THE COMMUNITY →';btn.style.opacity='1';}
+        if(visibility!=='confidential')setTimeout(()=>document.getElementById('cm-feed')?.scrollIntoView({behavior:'smooth',block:'start'}),400);
+      }).catch(err=>{
+        console.error('Community post error:',err);
+        errEl.textContent='• Error submitting. Please try again.';errEl.classList.add('show');
+        cmSubmitting=false;if(btn){btn.textContent='SHARE WITH THE COMMUNITY →';btn.style.opacity='1';}
+      });
+    });
+  }
+
+  if(typeof db!=='undefined'){
+    db.ref('community').once('value').then(snap=>{
+      const data=snap.val();
+      if(data){
+        const fromFB=Object.values(data).filter(p=>p.visibility!=='confidential');
+        const existing=new Set(cmPosts.map(p=>p.name+'|'+p.title));
+        fromFB.forEach(p=>{if(!existing.has(p.name+'|'+p.title))cmPosts.push(p);});
+        cmPosts.sort((a,b)=>new Date(b.date)-new Date(a.date));
+        cmSave('kc_cm_posts',cmPosts);
+      }
+      cmRender();
+    }).catch(()=>cmRender());
+  } else { cmRender(); }
+})();
+</script>
+  
 <!-- ACHIEVEMENTS -->
 <section id="ach-section" class="ach-section">
   <div class="lvl-display">
