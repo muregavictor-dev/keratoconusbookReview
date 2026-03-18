@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
+<!-- Masked email badge style — only addition to this file -->
+<style>
+.rcard-email{font-size:.65rem;color:rgba(255,255,255,.28);letter-spacing:.06em;margin-top:2px;}
+</style>
 </head>
 <body>
 <canvas id="cvc"></canvas>
@@ -236,11 +240,6 @@
     </div>
   </div>
  
-<!--
-  Replace the _next value below with your actual page URL.
-  When JS is disabled, Formspree redirects there after submission.
-  When JS is enabled, e.preventDefault() fires and this redirect never happens.
--->
 <div class="rev-grid">
 
   <!-- ── LEFT COL: Review Form ── -->
@@ -255,7 +254,6 @@
       method="POST"
       novalidate
     >
-      <!-- Replace the _next value with your real page URL e.g. https://victorkc.com/?thanks=1 -->
       <input type="hidden" name="_next"    value="https://throughthelensofkeratoconuskook-rev.vercel.app/">
       <input type="text"   name="_gotcha"  style="display:none" tabindex="-1" autocomplete="off">
       <input type="hidden" name="_subject" value="New book review — Through the Lens of Keratoconus">
@@ -280,6 +278,19 @@
             <option value="ebook">💻 eBook/PDF</option>
           </select>
         </div>
+      </div>
+
+      <!-- ── EMAIL FIELD (private — sent to Formspree + Firebase, masked in public feed) ── -->
+      <div class="frow">
+        <label class="flbl" for="inp-email">Your Email <span style="color:rgba(255,255,255,.35);font-weight:400">(private — never shown publicly)</span></label>
+        <input
+          class="finp"
+          type="email"
+          id="inp-email"
+          name="email"
+          placeholder="e.g. jane@example.com"
+          autocomplete="email"
+        >
       </div>
 
       <div class="frow">
@@ -757,28 +768,6 @@
     <a href="/cdn-cgi/l/email-protection#9af7efe8fffdfbecf3f9eef5e8a8aedafdf7fbf3f6b4f9f5f7">Contact</a>
   </div>
 </footer>
-  <!--
-  ═══════════════════════════════════════════════════════════════
-  SCRIPT LOADING ORDER — DO NOT CHANGE THE ORDER OF THESE TAGS
-  ═══════════════════════════════════════════════════════════════
-
-  1. Firebase compat SDKs (v10) — must load first, synchronously,
-     so that the global `firebase` object exists before script.js runs.
-     NO defer / async on these.
-
-  2. firebaseInit inline script — calls firebase.initializeApp() ONCE.
-     Inline so it runs immediately after the compat SDKs, still synchronously.
-     script.js just calls firebase.database() — it never calls initializeApp().
-
-  3. script.js with defer — deferred so the DOM is fully parsed before
-     any querySelector / getElementById calls inside it execute.
-
-  REMOVED: The <script type="module"> block that was importing Firebase v12
-  modular SDK. That conflicted with the compat v10 SDKs below and caused a
-  "Firebase App named '[DEFAULT]' already exists" error that silently killed
-  all database reads and writes.
-  ═══════════════════════════════════════════════════════════════
--->
 
 <!-- 1. Firebase compat SDKs — synchronous, no defer/async -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
